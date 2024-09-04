@@ -40,7 +40,7 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
 
   @override
   Widget get defaultIconData =>
-      SvgPicture.asset("assets/icons/text_style_toolbar/no_paragraph.svg",
+      SvgPicture.asset('assets/icons/text_style_toolbar/no_paragraph.svg',
         fit: BoxFit.scaleDown,
         // colorFilter: ColorFilter.mode(
         //     !(widget.controller.getSelectionStyle().containsKey('indent') ||

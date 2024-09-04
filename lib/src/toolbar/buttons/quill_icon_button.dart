@@ -21,6 +21,7 @@ class QuillToolbarIconButton extends StatelessWidget {
   final bool isSelected;
 
   final QuillIconTheme? iconTheme;
+
   @override
   Widget build(BuildContext context) {
     if (isSelected) {
@@ -39,7 +40,7 @@ class QuillToolbarIconButton extends StatelessWidget {
         padding: iconTheme?.iconButtonSelectedData?.padding,
         alignment: iconTheme?.iconButtonSelectedData?.alignment,
         splashRadius: iconTheme?.iconButtonSelectedData?.splashRadius,
-        color: iconTheme?.iconButtonSelectedData?.color,
+        color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF3a3a3a) : Colors.white,
         focusColor: iconTheme?.iconButtonSelectedData?.focusColor,
         hoverColor: iconTheme?.iconButtonSelectedData?.hoverColor,
         highlightColor: iconTheme?.iconButtonSelectedData?.highlightColor,
