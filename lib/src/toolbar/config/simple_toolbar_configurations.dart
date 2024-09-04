@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:flutter/widgets.dart' show Axis, WrapAlignment, WrapCrossAlignment;
+import 'package:flutter/widgets.dart' show Axis, Color, WrapAlignment, WrapCrossAlignment;
 
 import '../../controller/quill_controller.dart';
 import '../buttons/hearder_style/select_header_style_buttons.dart';
@@ -131,6 +131,8 @@ class QuillSimpleToolbarConfigurations extends QuillSharedToolbarProperties {
     this.linkStyleType = LinkStyleType.original,
     this.headerStyleType = HeaderStyleType.original,
     this.searchButtonType = SearchButtonType.modern,
+    this.selectableColorsText = const [],
+    this.selectableColorsBackground = const [],
 
     /// The decoration to use for the toolbar.
     super.decoration,
@@ -221,6 +223,9 @@ class QuillSimpleToolbarConfigurations extends QuillSharedToolbarProperties {
   final bool showClipboardCut;
   final bool showClipboardCopy;
   final bool showClipboardPaste;
+
+  final List<Color> selectableColorsText;
+  final List<Color> selectableColorsBackground;
 
   /// This activates a functionality that is only implemented in [flutter_quill] and is NOT originally
   /// used in the [Quill Js API]. So it could cause conflicts if you use this attribute with the original Delta format of Quill Js
