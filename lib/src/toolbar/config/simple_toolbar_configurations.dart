@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:flutter/widgets.dart'
-    show Axis, WrapAlignment, WrapCrossAlignment;
+import 'package:flutter/widgets.dart' show Axis, WrapAlignment, WrapCrossAlignment;
 
 import '../../controller/quill_controller.dart';
 import '../buttons/hearder_style/select_header_style_buttons.dart';
@@ -54,6 +53,7 @@ enum LinkStyleType {
   alternative;
 
   bool get isOriginal => this == LinkStyleType.original;
+
   bool get isAlternative => this == LinkStyleType.alternative;
 }
 
@@ -65,6 +65,7 @@ enum HeaderStyleType {
   buttons;
 
   bool get isOriginal => this == HeaderStyleType.original;
+
   bool get isButtons => this == HeaderStyleType.buttons;
 }
 
@@ -92,41 +93,41 @@ class QuillSimpleToolbarConfigurations extends QuillSharedToolbarProperties {
     this.fontFamilyValues,
     super.multiRowsDisplay = true,
     this.fontSizesValues,
-    this.showDividers = true,
-    this.showFontFamily = true,
-    this.showFontSize = true,
-    this.showBoldButton = true,
-    this.showItalicButton = true,
+    this.showDividers = false,
+    this.showFontFamily = false,
+    this.showFontSize = false,
+    this.showBoldButton = false,
+    this.showItalicButton = false,
     this.showSmallButton = false,
-    this.showUnderLineButton = true,
+    this.showUnderLineButton = false,
     this.showLineHeightButton = false,
-    this.showStrikeThrough = true,
-    this.showInlineCode = true,
-    this.showColorButton = true,
-    this.showBackgroundColorButton = true,
-    this.showClearFormat = true,
+    this.showStrikeThrough = false,
+    this.showInlineCode = false,
+    this.showColorButton = false,
+    this.showBackgroundColorButton = false,
+    this.showClearFormat = false,
     this.showAlignmentButtons = false,
-    this.showLeftAlignment = true,
-    this.showCenterAlignment = true,
-    this.showRightAlignment = true,
-    this.showJustifyAlignment = true,
-    this.showHeaderStyle = true,
-    this.showListNumbers = true,
-    this.showListBullets = true,
-    this.showListCheck = true,
-    this.showCodeBlock = true,
-    this.showQuote = true,
-    this.showIndent = true,
-    this.showLink = true,
-    this.showUndo = true,
-    this.showRedo = true,
+    this.showLeftAlignment = false,
+    this.showCenterAlignment = false,
+    this.showRightAlignment = false,
+    this.showJustifyAlignment = false,
+    this.showHeaderStyle = false,
+    this.showListNumbers = false,
+    this.showListBullets = false,
+    this.showListCheck = false,
+    this.showCodeBlock = false,
+    this.showQuote = false,
+    this.showIndent = false,
+    this.showLink = false,
+    this.showUndo = false,
+    this.showRedo = false,
     this.showDirection = false,
-    this.showSearchButton = true,
-    this.showSubscript = true,
-    this.showSuperscript = true,
-    this.showClipboardCut = true,
-    this.showClipboardCopy = true,
-    this.showClipboardPaste = true,
+    this.showSearchButton = false,
+    this.showSubscript = false,
+    this.showSuperscript = false,
+    this.showClipboardCut = false,
+    this.showClipboardCopy = false,
+    this.showClipboardPaste = false,
     this.linkStyleType = LinkStyleType.original,
     this.headerStyleType = HeaderStyleType.original,
     this.searchButtonType = SearchButtonType.modern,
