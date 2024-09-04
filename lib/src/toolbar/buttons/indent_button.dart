@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../l10n/extensions/localizations_ext.dart';
 import '../base_button/base_value_button.dart';
@@ -30,8 +31,12 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
   String get defaultTooltip => widget.isIncrease ? context.loc.increaseIndent : context.loc.decreaseIndent;
 
   @override
-  Widget get defaultIconData =>
-      widget.isIncrease ? Icon(Icons.format_indent_increase) : Icon(Icons.format_indent_decrease);
+  Widget get defaultIconData => widget.isIncrease
+      ? SvgPicture.asset(
+          'assets/icons/text_style_toolbar/bold_icon.svg',
+          fit: BoxFit.scaleDown,
+        )
+      : const Icon(Icons.format_indent_decrease);
 
   void _sharedOnPressed() {
     widget.controller.indentSelection(widget.isIncrease);
