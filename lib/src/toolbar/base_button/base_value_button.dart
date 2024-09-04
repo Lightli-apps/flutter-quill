@@ -32,9 +32,9 @@ abstract class QuillToolbarCommonButtonState<
   String get tooltip =>
       options.tooltip ?? baseButtonExtraOptions?.tooltip ?? defaultTooltip;
 
-  IconData get defaultIconData;
+  Widget get defaultIconData;
 
-  IconData get iconData =>
+  Widget get iconData =>
       options.iconData ??
       context.quillToolbarBaseButtonOptions?.iconData ??
       defaultIconData;

@@ -7,19 +7,14 @@ import '../../config/buttons/select_header_style_dropdown_button_configurations.
 import '../../simple_toolbar_provider.dart';
 import '../quill_icon_button.dart';
 
-typedef QuillToolbarSelectHeaderStyleDropdownBaseButton
-    = QuillToolbarBaseButton<QuillToolbarSelectHeaderStyleDropdownButtonOptions,
+typedef QuillToolbarSelectHeaderStyleDropdownBaseButton = QuillToolbarBaseButton<
+    QuillToolbarSelectHeaderStyleDropdownButtonOptions, QuillToolbarSelectHeaderStyleDropdownButtonExtraOptions>;
+
+typedef QuillToolbarSelectHeaderStyleDropdownBaseButtonsState<W extends QuillToolbarSelectHeaderStyleDropdownButton>
+    = QuillToolbarCommonButtonState<W, QuillToolbarSelectHeaderStyleDropdownButtonOptions,
         QuillToolbarSelectHeaderStyleDropdownButtonExtraOptions>;
 
-typedef QuillToolbarSelectHeaderStyleDropdownBaseButtonsState<
-        W extends QuillToolbarSelectHeaderStyleDropdownButton>
-    = QuillToolbarCommonButtonState<
-        W,
-        QuillToolbarSelectHeaderStyleDropdownButtonOptions,
-        QuillToolbarSelectHeaderStyleDropdownButtonExtraOptions>;
-
-class QuillToolbarSelectHeaderStyleDropdownButton
-    extends QuillToolbarSelectHeaderStyleDropdownBaseButton {
+class QuillToolbarSelectHeaderStyleDropdownButton extends QuillToolbarSelectHeaderStyleDropdownBaseButton {
   const QuillToolbarSelectHeaderStyleDropdownButton({
     required super.controller,
     super.options = const QuillToolbarSelectHeaderStyleDropdownButtonOptions(),
@@ -31,17 +26,17 @@ class QuillToolbarSelectHeaderStyleDropdownButton
       _QuillToolbarSelectHeaderStyleDropdownButtonState();
 }
 
-class _QuillToolbarSelectHeaderStyleDropdownButtonState
-    extends QuillToolbarSelectHeaderStyleDropdownBaseButtonsState {
+class _QuillToolbarSelectHeaderStyleDropdownButtonState extends QuillToolbarSelectHeaderStyleDropdownBaseButtonsState {
   @override
   String get defaultTooltip => context.loc.headerStyle;
 
   @override
-  IconData get defaultIconData => Icons.question_mark_outlined;
+  Widget get defaultIconData => Icon(Icons.question_mark_outlined);
 
   Attribute<dynamic> _selectedItem = Attribute.header;
 
   final _menuController = MenuController();
+
   @override
   void initState() {
     super.initState();
@@ -55,8 +50,7 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
   }
 
   @override
-  void didUpdateWidget(
-      covariant QuillToolbarSelectHeaderStyleDropdownButton oldWidget) {
+  void didUpdateWidget(covariant QuillToolbarSelectHeaderStyleDropdownButton oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.controller == widget.controller) {
       return;
@@ -83,10 +77,7 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
       widget.controller.toolbarButtonToggler.remove(Attribute.header.key);
       return attr;
     }
-    return widget.controller
-            .getSelectionStyle()
-            .attributes[Attribute.header.key] ??
-        Attribute.header;
+    return widget.controller.getSelectionStyle().attributes[Attribute.header.key] ?? Attribute.header;
   }
 
   String _label(Attribute<dynamic> value) {
@@ -97,8 +88,7 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
       Attribute.h4 => context.loc.heading4,
       Attribute.h5 => context.loc.heading5,
       Attribute.h6 => context.loc.heading6,
-      Attribute.header =>
-        widget.options.defaultDisplayText ?? context.loc.normal,
+      Attribute.header => widget.options.defaultDisplayText ?? context.loc.normal,
       Attribute<dynamic>() => throw ArgumentError(),
     };
     return label;
@@ -122,8 +112,7 @@ class _QuillToolbarSelectHeaderStyleDropdownButtonState
   @override
   Widget build(BuildContext context) {
     final baseButtonConfigurations = context.quillToolbarBaseButtonOptions;
-    final childBuilder =
-        widget.options.childBuilder ?? baseButtonConfigurations?.childBuilder;
+    final childBuilder = widget.options.childBuilder ?? baseButtonConfigurations?.childBuilder;
     if (childBuilder != null) {
       return childBuilder(
         widget.options,

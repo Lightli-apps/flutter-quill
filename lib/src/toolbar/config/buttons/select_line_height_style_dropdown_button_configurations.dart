@@ -1,25 +1,23 @@
-import 'package:flutter/widgets.dart'
-    show IconData, TextStyle, ValueChanged, VoidCallback;
+import 'package:flutter/widgets.dart' show TextStyle, ValueChanged, VoidCallback, Widget;
 
 import '../../../document/attribute.dart';
 import '../../base_toolbar.dart';
 import '../../theme/quill_icon_theme.dart';
 
-class QuillToolbarSelectLineHeightStyleDropdownButtonExtraOptions
-    extends QuillToolbarBaseButtonExtraOptions {
+class QuillToolbarSelectLineHeightStyleDropdownButtonExtraOptions extends QuillToolbarBaseButtonExtraOptions {
   const QuillToolbarSelectLineHeightStyleDropdownButtonExtraOptions({
     required super.controller,
     required super.context,
     required super.onPressed,
     required this.currentValue,
   });
+
   final Attribute currentValue;
 }
 
-class QuillToolbarSelectLineHeightStyleDropdownButtonOptions
-    extends QuillToolbarBaseButtonOptions<
-        QuillToolbarSelectLineHeightStyleDropdownButtonOptions,
-        QuillToolbarSelectLineHeightStyleDropdownButtonExtraOptions> {
+class QuillToolbarSelectLineHeightStyleDropdownButtonOptions extends QuillToolbarBaseButtonOptions<
+    QuillToolbarSelectLineHeightStyleDropdownButtonOptions,
+    QuillToolbarSelectLineHeightStyleDropdownButtonExtraOptions> {
   const QuillToolbarSelectLineHeightStyleDropdownButtonOptions({
     super.afterButtonPressed,
     super.childBuilder,
@@ -56,7 +54,7 @@ class QuillToolbarSelectLineHeightStyleDropdownButtonOptions
     TextStyle? style,
     double? iconSize,
     double? iconButtonFactor,
-    IconData? iconData,
+    Widget? iconData,
     VoidCallback? afterButtonPressed,
     String? tooltip,
     QuillIconTheme? iconTheme,

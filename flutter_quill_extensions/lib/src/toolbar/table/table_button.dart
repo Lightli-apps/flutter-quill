@@ -29,8 +29,7 @@ class QuillToolbarTableButton extends StatelessWidget {
   }
 
   VoidCallback? _afterButtonPressed(BuildContext context) {
-    return options.afterButtonPressed ??
-        baseButtonExtraOptions(context)?.afterButtonPressed;
+    return options.afterButtonPressed ?? baseButtonExtraOptions(context)?.afterButtonPressed;
   }
 
   QuillIconTheme? _iconTheme(BuildContext context) {
@@ -41,16 +40,12 @@ class QuillToolbarTableButton extends StatelessWidget {
     return context.quillToolbarBaseButtonOptions;
   }
 
-  IconData _iconData(BuildContext context) {
-    return options.iconData ??
-        baseButtonExtraOptions(context)?.iconData ??
-        Icons.table_chart;
+  Widget _iconData(BuildContext context) {
+    return options.iconData ?? baseButtonExtraOptions(context)?.iconData ?? const Icon(Icons.table_chart);
   }
 
   String _tooltip(BuildContext context) {
-    return options.tooltip ??
-        baseButtonExtraOptions(context)?.tooltip ??
-        context.loc.insertTable;
+    return options.tooltip ?? baseButtonExtraOptions(context)?.tooltip ?? context.loc.insertTable;
   }
 
   void _sharedOnPressed(BuildContext context) {
@@ -64,8 +59,7 @@ class QuillToolbarTableButton extends StatelessWidget {
     final iconSize = _iconSize(context);
     final iconButtonFactor = _iconButtonFactor(context);
     final iconData = _iconData(context);
-    final childBuilder =
-        options.childBuilder ?? baseButtonExtraOptions(context)?.childBuilder;
+    final childBuilder = options.childBuilder ?? baseButtonExtraOptions(context)?.childBuilder;
 
     if (childBuilder != null) {
       return childBuilder(
@@ -86,10 +80,7 @@ class QuillToolbarTableButton extends StatelessWidget {
     }
 
     return QuillToolbarIconButton(
-      icon: Icon(
-        iconData,
-        size: iconButtonFactor * iconSize,
-      ),
+      icon: iconData,
       tooltip: tooltip,
       isSelected: false,
       onPressed: () => _sharedOnPressed(context),

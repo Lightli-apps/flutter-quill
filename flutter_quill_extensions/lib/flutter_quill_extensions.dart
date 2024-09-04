@@ -58,7 +58,7 @@ class FlutterQuillExtensions {
   /// Override default implementation of [ClipboardServiceProvider.instance]
   /// to allow `flutter_quill` package to use `super_clipboard` plugin
   /// to support rich text features, gif and images.
-  static void useSuperClipboardPlugin() {
-    ClipboardServiceProvider.setInstance(SuperClipboardService());
-  }
+  // static void useSuperClipboardPlugin() {
+  //   ClipboardServiceProvider.setInstance(SuperClipboardService());
+  // }
 }

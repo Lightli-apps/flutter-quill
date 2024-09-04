@@ -1,21 +1,12 @@
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:flutter/material.dart' show Colors, PopupMenuEntry;
+import 'package:flutter/material.dart' show Colors, PopupMenuEntry, Widget;
 import 'package:flutter/widgets.dart'
-    show
-        Color,
-        EdgeInsets,
-        EdgeInsetsGeometry,
-        IconData,
-        TextOverflow,
-        TextStyle,
-        ValueChanged,
-        VoidCallback;
+    show Color, EdgeInsets, EdgeInsetsGeometry, TextOverflow, TextStyle, ValueChanged, VoidCallback;
 
 import '../../../../flutter_quill.dart';
 
 @immutable
-class QuillToolbarFontFamilyButtonExtraOptions
-    extends QuillToolbarBaseButtonExtraOptions {
+class QuillToolbarFontFamilyButtonExtraOptions extends QuillToolbarBaseButtonExtraOptions {
   const QuillToolbarFontFamilyButtonExtraOptions({
     required this.defaultDisplayText,
     required this.currentValue,
@@ -23,12 +14,12 @@ class QuillToolbarFontFamilyButtonExtraOptions
     required super.context,
     required super.onPressed,
   });
+
   final String defaultDisplayText;
   final String currentValue;
 }
 
-class QuillToolbarFontFamilyButtonOptions extends QuillToolbarBaseButtonOptions<
-    QuillToolbarFontFamilyButtonOptions,
+class QuillToolbarFontFamilyButtonOptions extends QuillToolbarBaseButtonOptions<QuillToolbarFontFamilyButtonOptions,
     QuillToolbarFontFamilyButtonExtraOptions> {
   const QuillToolbarFontFamilyButtonOptions({
     this.attribute = Attribute.font,
@@ -89,7 +80,7 @@ class QuillToolbarFontFamilyButtonOptions extends QuillToolbarBaseButtonOptions<
     Color? defaultItemColor,
     double? iconSize,
     double? iconButtonFactor,
-    IconData? iconData,
+    Widget? iconData,
     VoidCallback? afterButtonPressed,
     String? tooltip,
     QuillIconTheme? iconTheme,
@@ -109,8 +100,7 @@ class QuillToolbarFontFamilyButtonOptions extends QuillToolbarBaseButtonOptions<
       initialValue: initialValue ?? this.initialValue,
       labelOverflow: labelOverflow ?? this.labelOverflow,
       renderFontFamilies: renderFontFamilies ?? this.renderFontFamilies,
-      overrideTooltipByFontFamily:
-          overrideTooltipByFontFamily ?? this.overrideTooltipByFontFamily,
+      overrideTooltipByFontFamily: overrideTooltipByFontFamily ?? this.overrideTooltipByFontFamily,
       itemHeight: itemHeight ?? this.itemHeight,
       itemPadding: itemPadding ?? this.itemPadding,
       defaultItemColor: defaultItemColor ?? this.defaultItemColor,

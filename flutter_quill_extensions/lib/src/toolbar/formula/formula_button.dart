@@ -38,10 +38,10 @@ class QuillToolbarFormulaButton extends StatelessWidget {
     return context.quillToolbarBaseButtonOptions;
   }
 
-  IconData _iconData(BuildContext context) {
+  Widget _iconData(BuildContext context) {
     return options.iconData ??
         baseButtonExtraOptions(context)?.iconData ??
-        Icons.functions;
+        const Icon(Icons.functions);
   }
 
   String _tooltip(BuildContext context) {
@@ -86,10 +86,9 @@ class QuillToolbarFormulaButton extends StatelessWidget {
     }
 
     return QuillToolbarIconButton(
-      icon: Icon(
+      icon:
         iconData,
-        size: iconSize * iconButtonFactor,
-      ),
+
       tooltip: tooltip,
       onPressed: () => _sharedOnPressed(context),
       isSelected: false,

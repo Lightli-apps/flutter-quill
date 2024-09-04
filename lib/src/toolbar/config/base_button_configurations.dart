@@ -60,7 +60,7 @@ class QuillToolbarBaseButtonOptions<T, I> extends Equatable {
   /// By default it will use a Icon data from Icons which comes from material
   /// library, to change this, please pass a different value
   /// If there is no Icon in this button then pass null in the child class
-  final IconData? iconData;
+  final Widget? iconData;
 
   /// To change the the icon size pass a different value, by default will be
   /// [kDefaultIconSize].

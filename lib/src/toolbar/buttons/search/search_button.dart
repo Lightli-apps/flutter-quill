@@ -38,8 +38,7 @@ class QuillToolbarSearchButton extends StatelessWidget {
   }
 
   VoidCallback? _afterButtonPressed(BuildContext context) {
-    return options.afterButtonPressed ??
-        baseButtonExtraOptions(context)?.afterButtonPressed;
+    return options.afterButtonPressed ?? baseButtonExtraOptions(context)?.afterButtonPressed;
   }
 
   QuillIconTheme? _iconTheme(BuildContext context) {
@@ -50,16 +49,12 @@ class QuillToolbarSearchButton extends StatelessWidget {
     return context.quillToolbarBaseButtonOptions;
   }
 
-  IconData _iconData(BuildContext context) {
-    return options.iconData ??
-        baseButtonExtraOptions(context)?.iconData ??
-        Icons.search;
+  Widget _iconData(BuildContext context) {
+    return options.iconData ?? baseButtonExtraOptions(context)?.iconData ?? const Icon(Icons.search);
   }
 
   String _tooltip(BuildContext context) {
-    return options.tooltip ??
-        baseButtonExtraOptions(context)?.tooltip ??
-        (context.loc.search);
+    return options.tooltip ?? baseButtonExtraOptions(context)?.tooltip ?? (context.loc.search);
   }
 
   Color _dialogBarrierColor(BuildContext context) {
@@ -67,8 +62,7 @@ class QuillToolbarSearchButton extends StatelessWidget {
   }
 
   QuillDialogTheme? _dialogTheme(BuildContext context) {
-    return options.dialogTheme ??
-        context.quillSharedConfigurations?.dialogTheme;
+    return options.dialogTheme ?? context.quillSharedConfigurations?.dialogTheme;
   }
 
   @override
@@ -80,8 +74,7 @@ class QuillToolbarSearchButton extends StatelessWidget {
     final iconButtonFactor = _iconButtonFactor(context);
     final afterButtonPressed = _afterButtonPressed(context);
 
-    final childBuilder =
-        options.childBuilder ?? baseButtonExtraOptions(context)?.childBuilder;
+    final childBuilder = options.childBuilder ?? baseButtonExtraOptions(context)?.childBuilder;
 
     if (childBuilder != null) {
       return childBuilder(
@@ -99,10 +92,7 @@ class QuillToolbarSearchButton extends StatelessWidget {
 
     return QuillToolbarIconButton(
       tooltip: tooltip,
-      icon: Icon(
-        iconData,
-        size: iconSize * iconButtonFactor,
-      ),
+      icon: iconData,
       isSelected: false,
       onPressed: () => _sharedOnPressed(context),
       afterPressed: afterButtonPressed,

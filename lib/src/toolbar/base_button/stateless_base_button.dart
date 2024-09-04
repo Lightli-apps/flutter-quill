@@ -47,22 +47,19 @@ abstract class QuillToolbarBaseButton<T, I> extends StatelessWidget {
     return context.quillToolbarBaseButtonOptions;
   }
 
-  IconData iconData(BuildContext context) {
-    return options?.iconData ??
-        baseButtonExtraOptions(context)?.iconData ??
-        getDefaultIconData(context);
+  Widget iconData(BuildContext context) {
+    return options?.iconData ?? baseButtonExtraOptions(context)?.iconData ?? getDefaultIconData(context);
   }
 
   String tooltip(BuildContext context) {
-    return options?.tooltip ??
-        baseButtonExtraOptions(context)?.tooltip ??
-        getDefaultTooltip(context);
+    return options?.tooltip ?? baseButtonExtraOptions(context)?.tooltip ?? getDefaultTooltip(context);
   }
 
-  abstract final IconData Function(BuildContext context) getDefaultIconData;
+  abstract final Widget Function(BuildContext context) getDefaultIconData;
   abstract final String Function(BuildContext context) getDefaultTooltip;
 
   Widget buildButton(BuildContext context);
+
   Widget? buildCustomChildBuilder(
     BuildContext context,
   );

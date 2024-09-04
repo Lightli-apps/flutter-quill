@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../controller/quill_controller.dart';
 import '../document/attribute.dart';
@@ -9,8 +10,7 @@ import 'buttons/arrow_indicated_list_button.dart';
 import 'config/toolbar_configurations.dart';
 import 'simple_toolbar_provider.dart';
 
-class QuillSimpleToolbar extends StatelessWidget
-    implements PreferredSizeWidget {
+class QuillSimpleToolbar extends StatelessWidget implements PreferredSizeWidget {
   factory QuillSimpleToolbar({
     required QuillSimpleToolbarConfigurations? configurations,
     QuillController? controller,
@@ -20,9 +20,7 @@ class QuillSimpleToolbar extends StatelessWidget
     controller ??= configurations?.controller;
     assert(controller != null,
         'controller required. Provide controller directly (preferred) or indirectly through configurations (not recommended - will be removed in future versions).');
-    controller ??= QuillController(
-        document: Document(),
-        selection: const TextSelection.collapsed(offset: 0));
+    controller ??= QuillController(document: Document(), selection: const TextSelection.collapsed(offset: 0));
     //
     controller.toolbarConfigurations = configurations;
     //
@@ -40,8 +38,7 @@ class QuillSimpleToolbar extends StatelessWidget
   final QuillController controller;
 
   /// The configurations for the toolbar widget of flutter quill
-  QuillSimpleToolbarConfigurations get configurations =>
-      controller.toolbarConfigurations;
+  QuillSimpleToolbarConfigurations get configurations => controller.toolbarConfigurations;
 
   double get _toolbarSize => configurations.toolbarSize * 1.4;
 
@@ -50,8 +47,7 @@ class QuillSimpleToolbar extends StatelessWidget
     final theEmbedButtons = configurations.embedButtons;
 
     List<Widget> childrenBuilder(BuildContext context) {
-      final toolbarConfigurations =
-          context.requireQuillSimpleToolbarConfigurations;
+      final toolbarConfigurations = context.requireQuillSimpleToolbarConfigurations;
 
       final globalIconSize = toolbarConfigurations.buttonOptions.base.iconSize;
 
@@ -73,20 +69,25 @@ class QuillSimpleToolbar extends StatelessWidget
               options: toolbarConfigurations.buttonOptions.undoHistory,
               controller: controller,
             ),
+          if (configurations.showUndo) SizedBox(width: 16.w),
           if (configurations.showRedo)
             QuillToolbarHistoryButton(
               isUndo: false,
               options: toolbarConfigurations.buttonOptions.redoHistory,
               controller: controller,
             ),
-          if (configurations.showFontFamily)
-            QuillToolbarFontFamilyButton(
-              options: toolbarConfigurations.buttonOptions.fontFamily,
-              controller: controller,
-            ),
           if (configurations.showFontSize)
             QuillToolbarFontSizeButton(
               options: toolbarConfigurations.buttonOptions.fontSize,
+              controller: controller,
+            ),
+          if (configurations.showFontSize)
+            SizedBox(
+              height: 8.h,
+            ),
+          if (configurations.showFontFamily)
+            QuillToolbarFontFamilyButton(
+              options: toolbarConfigurations.buttonOptions.fontFamily,
               controller: controller,
             ),
           if (configurations.showBoldButton)
@@ -95,17 +96,29 @@ class QuillSimpleToolbar extends StatelessWidget
               options: toolbarConfigurations.buttonOptions.bold,
               controller: controller,
             ),
+          if (configurations.showBoldButton)
+            SizedBox(
+              width: 10.h,
+            ),
           if (configurations.showItalicButton)
             QuillToolbarToggleStyleButton(
               attribute: Attribute.italic,
               options: toolbarConfigurations.buttonOptions.italic,
               controller: controller,
             ),
+          if (configurations.showItalicButton)
+            SizedBox(
+              width: 10.h,
+            ),
           if (configurations.showUnderLineButton)
             QuillToolbarToggleStyleButton(
               attribute: Attribute.underline,
               options: toolbarConfigurations.buttonOptions.underLine,
               controller: controller,
+            ),
+          if (configurations.showUnderLineButton)
+            SizedBox(
+              width: 10.h,
             ),
           if (configurations.showStrikeThrough)
             QuillToolbarToggleStyleButton(
@@ -137,44 +150,33 @@ class QuillSimpleToolbar extends StatelessWidget
               options: toolbarConfigurations.buttonOptions.small,
               controller: controller,
             ),
-          if (configurations.showColorButton)
-            QuillToolbarColorButton(
-              controller: controller,
-              isBackground: false,
-              options: toolbarConfigurations.buttonOptions.color,
-            ),
-          if (configurations.showBackgroundColorButton)
-            QuillToolbarColorButton(
-              options: toolbarConfigurations.buttonOptions.backgroundColor,
-              controller: controller,
-              isBackground: true,
-            ),
-          if (configurations.showClearFormat)
-            QuillToolbarClearFormatButton(
-              controller: controller,
-              options: toolbarConfigurations.buttonOptions.clearFormat,
-            ),
           if (theEmbedButtons != null)
             for (final builder in theEmbedButtons)
-              builder(
-                  controller,
-                  globalIconSize ?? kDefaultIconSize,
-                  context.quillToolbarBaseButtonOptions?.iconTheme,
+              builder(controller, globalIconSize ?? kDefaultIconSize, context.quillToolbarBaseButtonOptions?.iconTheme,
                   configurations.dialogTheme),
         ],
         [
-          if (configurations.showAlignmentButtons)
-            QuillToolbarSelectAlignmentButtons(
-              controller: controller,
-              options: toolbarConfigurations
-                  .buttonOptions.selectAlignmentButtons
-                  .copyWith(
-                showLeftAlignment: configurations.showLeftAlignment,
-                showCenterAlignment: configurations.showCenterAlignment,
-                showRightAlignment: configurations.showRightAlignment,
-                showJustifyAlignment: configurations.showJustifyAlignment,
+          Column(
+            children: [
+              if (configurations.showColorButton)
+                QuillToolbarColorButton(
+                  controller: controller,
+                  isBackground: false,
+                  options: toolbarConfigurations.buttonOptions.color,
+                ),
+              SizedBox(
+                height: 10.w,
               ),
-            ),
+              if (configurations.showBackgroundColorButton)
+                QuillToolbarColorButton(
+                  options: toolbarConfigurations.buttonOptions.backgroundColor,
+                  controller: controller,
+                  isBackground: true,
+                ),
+            ],
+          ),
+        ],
+        [
           if (configurations.showDirection)
             QuillToolbarToggleStyleButton(
               attribute: Attribute.rtl,
@@ -186,47 +188,73 @@ class QuillSimpleToolbar extends StatelessWidget
           if (configurations.showLineHeightButton)
             QuillToolbarSelectLineHeightStyleDropdownButton(
               controller: controller,
-              options: toolbarConfigurations
-                  .buttonOptions.selectLineHeightStyleDropdownButton,
+              options: toolbarConfigurations.buttonOptions.selectLineHeightStyleDropdownButton,
             ),
           if (configurations.showHeaderStyle) ...[
             if (configurations.headerStyleType.isOriginal)
               QuillToolbarSelectHeaderStyleDropdownButton(
                 controller: controller,
-                options: toolbarConfigurations
-                    .buttonOptions.selectHeaderStyleDropdownButton,
+                options: toolbarConfigurations.buttonOptions.selectHeaderStyleDropdownButton,
               )
             else
               QuillToolbarSelectHeaderStyleButtons(
                 controller: controller,
-                options: toolbarConfigurations
-                    .buttonOptions.selectHeaderStyleButtons,
+                options: toolbarConfigurations.buttonOptions.selectHeaderStyleButtons,
               ),
           ],
         ],
         [
-          if (configurations.showListNumbers)
-            QuillToolbarToggleStyleButton(
-              attribute: Attribute.ol,
-              options: toolbarConfigurations.buttonOptions.listNumbers,
-              controller: controller,
-            ),
-          if (configurations.showListBullets)
-            QuillToolbarToggleStyleButton(
-              attribute: Attribute.ul,
-              options: toolbarConfigurations.buttonOptions.listBullets,
-              controller: controller,
-            ),
-          if (configurations.showListCheck)
-            QuillToolbarToggleCheckListButton(
-              options: toolbarConfigurations.buttonOptions.toggleCheckList,
-              controller: controller,
-            ),
-          if (configurations.showCodeBlock)
-            QuillToolbarToggleStyleButton(
-              attribute: Attribute.codeBlock,
-              options: toolbarConfigurations.buttonOptions.codeBlock,
-              controller: controller,
+          if (configurations.showClearFormat)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    if (configurations.showClearFormat)
+                      QuillToolbarClearFormatButton(
+                        controller: controller,
+                        options: toolbarConfigurations.buttonOptions.clearFormat,
+                      ),
+                    SizedBox(
+                      width: 8.w,
+                    ),
+                    if (configurations.showIndent)
+                      QuillToolbarIndentButton(
+                        controller: controller,
+                        isIncrease: true,
+                        options: toolbarConfigurations.buttonOptions.indentIncrease,
+                      ),
+                    SizedBox(
+                      width: 8.w,
+                    ),
+                    if (configurations.showListBullets)
+                      QuillToolbarToggleStyleButton(
+                        attribute: Attribute.ul,
+                        options: toolbarConfigurations.buttonOptions.listBullets,
+                        controller: controller,
+                      ),
+                    SizedBox(
+                      width: 8.w,
+                    ),
+                    if (configurations.showListNumbers)
+                      QuillToolbarToggleStyleButton(
+                        attribute: Attribute.ol,
+                        options: toolbarConfigurations.buttonOptions.listNumbers,
+                        controller: controller,
+                      ),
+                  ],
+                ),
+                if (configurations.showAlignmentButtons)
+                  QuillToolbarSelectAlignmentButtons(
+                    controller: controller,
+                    options: toolbarConfigurations.buttonOptions.selectAlignmentButtons.copyWith(
+                      showLeftAlignment: configurations.showLeftAlignment,
+                      showCenterAlignment: configurations.showCenterAlignment,
+                      showRightAlignment: configurations.showRightAlignment,
+                      showJustifyAlignment: configurations.showJustifyAlignment,
+                    ),
+                  ),
+              ],
             ),
         ],
         [
@@ -235,18 +263,6 @@ class QuillSimpleToolbar extends StatelessWidget
               options: toolbarConfigurations.buttonOptions.quote,
               controller: controller,
               attribute: Attribute.blockQuote,
-            ),
-          if (configurations.showIndent)
-            QuillToolbarIndentButton(
-              controller: controller,
-              isIncrease: true,
-              options: toolbarConfigurations.buttonOptions.indentIncrease,
-            ),
-          if (configurations.showIndent)
-            QuillToolbarIndentButton(
-              controller: controller,
-              isIncrease: false,
-              options: toolbarConfigurations.buttonOptions.indentDecrease,
             ),
         ],
         [
@@ -305,13 +321,12 @@ class QuillSimpleToolbar extends StatelessWidget
         final buttons = groups[i];
 
         if (buttons.isNotEmpty) {
-          if (buttonsAll.isNotEmpty && configurations.showDividers) {
-            buttonsAll.add(divider);
-          }
+          // if (buttonsAll.isNotEmpty) {
+          //   buttonsAll.add(divider);
+          // }
           buttonsAll.addAll(buttons);
         }
       }
-
       return buttonsAll;
     }
 
@@ -336,15 +351,11 @@ class QuillSimpleToolbar extends StatelessWidget
             return Container(
               decoration: configurations.decoration ??
                   BoxDecoration(
-                    color:
-                        configurations.color ?? Theme.of(context).canvasColor,
+                    color: configurations.color ?? Theme.of(context).canvasColor,
                   ),
               constraints: BoxConstraints.tightFor(
-                height: configurations.axis == Axis.horizontal
-                    ? _toolbarSize
-                    : null,
-                width:
-                    configurations.axis == Axis.vertical ? _toolbarSize : null,
+                height: configurations.axis == Axis.horizontal ? _toolbarSize : null,
+                width: configurations.axis == Axis.vertical ? _toolbarSize : null,
               ),
               child: QuillToolbarArrowIndicatedButtonList(
                 axis: configurations.axis,

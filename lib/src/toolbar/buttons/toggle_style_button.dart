@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../common/utils/widgets.dart';
 import '../../document/attribute.dart';
@@ -10,15 +11,15 @@ import '../simple_toolbar_provider.dart';
 import '../theme/quill_icon_theme.dart';
 
 typedef ToggleStyleButtonBuilder = Widget Function(
-  BuildContext context,
-  Attribute attribute,
-  IconData icon,
-  bool? isToggled,
-  VoidCallback? onPressed,
-  VoidCallback? afterPressed, [
-  double iconSize,
-  QuillIconTheme? iconTheme,
-]);
+    BuildContext context,
+    Attribute attribute,
+    IconData icon,
+    bool? isToggled,
+    VoidCallback? onPressed,
+    VoidCallback? afterPressed, [
+    double iconSize,
+    QuillIconTheme? iconTheme,
+    ]);
 
 class QuillToolbarToggleStyleButton extends QuillToolbarToggleStyleBaseButton {
   const QuillToolbarToggleStyleButton({
@@ -35,57 +36,183 @@ class QuillToolbarToggleStyleButton extends QuillToolbarToggleStyleBaseButton {
       QuillToolbarToggleStyleButtonState();
 }
 
-class QuillToolbarToggleStyleButtonState
-    extends QuillToolbarToggleStyleBaseButtonState<
-        QuillToolbarToggleStyleButton> {
+class QuillToolbarToggleStyleButtonState extends QuillToolbarToggleStyleBaseButtonState<
+    QuillToolbarToggleStyleButton> {
   Style get _selectionStyle => controller.getSelectionStyle();
 
   @override
   bool get currentStateValue => _getIsToggled(_selectionStyle.attributes);
 
-  (String, IconData) get _defaultTooltipAndIconData {
+  (String, Widget) get _defaultTooltipAndIconData {
     switch (widget.attribute.key) {
       case 'bold':
-        return (context.loc.bold, Icons.format_bold);
+        return (context.loc.bold, SvgPicture.asset(
+          'assets/icons/text_style_toolbar/bold_icon.svg', fit: BoxFit.scaleDown,
+          colorFilter: ColorFilter.mode(currentStateValue ?
+          Theme
+              .of(context)
+              .brightness == Brightness.light ?
+          Colors.white :
+          Colors.black : Theme
+              .of(context)
+              .textTheme
+              .headlineSmall!
+              .color!, BlendMode.srcIn),
+        ));
       case 'script':
         if (widget.attribute.value == ScriptAttributes.sub.value) {
-          return (context.loc.subscript, Icons.subscript);
+          return (context.loc.subscript, const Icon(Icons.subscript));
         }
-        return (context.loc.superscript, Icons.superscript);
+        return (context.loc.superscript, const Icon(Icons.superscript));
       case 'italic':
-        return (context.loc.italic, Icons.format_italic);
+        return (context.loc.italic, SvgPicture.asset(
+          'assets/icons/text_style_toolbar/italic_icon.svg', fit: BoxFit.scaleDown,
+          colorFilter: ColorFilter.mode(currentStateValue ?
+          Theme
+              .of(context)
+              .brightness == Brightness.light ?
+          Colors.white :
+          Colors.black : Theme
+              .of(context)
+              .textTheme
+              .headlineSmall!
+              .color!, BlendMode.srcIn),));
       case 'small':
-        return (context.loc.small, Icons.format_size);
+        return (context.loc.small, const Icon(Icons.format_size));
       case 'underline':
-        return (context.loc.underline, Icons.format_underline);
+        return (context.loc.underline, SvgPicture.asset(
+          'assets/icons/text_style_toolbar/underline_icon.svg', fit: BoxFit.scaleDown,
+          colorFilter: ColorFilter.mode(currentStateValue ?
+          Theme
+              .of(context)
+              .brightness == Brightness.light ?
+          Colors.white :
+          Colors.black : Theme
+              .of(context)
+              .textTheme
+              .headlineSmall!
+              .color!, BlendMode.srcIn),));
       case 'strike':
-        return (context.loc.strikeThrough, Icons.format_strikethrough);
+        return (context.loc.strikeThrough, SvgPicture.asset(
+          'assets/icons/text_style_toolbar/strikethrough_icon.svg', fit: BoxFit.scaleDown,
+          colorFilter: ColorFilter.mode(currentStateValue ?
+          Theme
+              .of(context)
+              .brightness == Brightness.light ?
+          Colors.white :
+          Colors.black : Theme
+              .of(context)
+              .textTheme
+              .headlineSmall!
+              .color!, BlendMode.srcIn),));
       case 'code':
-        return (context.loc.inlineCode, Icons.code);
+        return (context.loc.inlineCode, const Icon(Icons.code));
       case 'direction':
-        return (context.loc.textDirection, Icons.format_textdirection_r_to_l);
+        return (context.loc.textDirection, const Icon(Icons.format_textdirection_r_to_l));
       case 'list':
         if (widget.attribute.value == 'bullet') {
-          return (context.loc.bulletList, Icons.format_list_bulleted);
+          return (context.loc.bulletList, SvgPicture.asset(
+            'assets/icons/text_style_toolbar/bullet_paragraph.svg', fit: BoxFit.scaleDown,
+            colorFilter: ColorFilter.mode(currentStateValue ?
+            Theme
+                .of(context)
+                .brightness == Brightness.light ?
+            Colors.white :
+            Colors.black : Theme
+                .of(context)
+                .textTheme
+                .headlineSmall!
+                .color!, BlendMode.srcIn),));
         }
-        return (context.loc.numberedList, Icons.format_list_numbered);
+        return (context.loc.numberedList, SvgPicture.asset(
+          'assets/icons/text_style_toolbar/number_paragraph.svg', fit: BoxFit.scaleDown,
+          colorFilter: ColorFilter.mode(currentStateValue ?
+          Theme
+              .of(context)
+              .brightness == Brightness.light ?
+          Colors.white :
+          Colors.black : Theme
+              .of(context)
+              .textTheme
+              .headlineSmall!
+              .color!, BlendMode.srcIn),));
       case 'code-block':
-        return (context.loc.codeBlock, Icons.code);
+        return (context.loc.codeBlock, const Icon(Icons.code));
       case 'blockquote':
-        return (context.loc.quote, Icons.format_quote);
+        return (context.loc.quote, const Icon(Icons.format_quote));
       case 'align':
         return switch (widget.attribute.value) {
-          'left' => (context.loc.alignLeft, Icons.format_align_left),
-          'right' => (context.loc.alignRight, Icons.format_align_right),
-          'center' => (context.loc.alignCenter, Icons.format_align_center),
-          'justify' => (context.loc.alignJustify, Icons.format_align_justify),
+          'left' =>
+          (context.loc.alignLeft, SvgPicture.asset(
+            'assets/icons/text_style_toolbar/left_alignment.svg', fit: BoxFit.scaleDown,
+            colorFilter: ColorFilter.mode(currentStateValue ?
+            Theme
+                .of(context)
+                .brightness == Brightness.light ?
+            Colors.white :
+            Colors.black : Theme
+                .of(context)
+                .textTheme
+                .headlineSmall!
+                .color!, BlendMode.srcIn),)),
+          'right' =>
+          (context.loc.alignRight, SvgPicture.asset(
+            'assets/icons/text_style_toolbar/right_alignment.svg', fit: BoxFit.scaleDown,
+            colorFilter: ColorFilter.mode(currentStateValue ?
+            Theme
+                .of(context)
+                .brightness == Brightness.light ?
+            Colors.white :
+            Colors.black : Theme
+                .of(context)
+                .textTheme
+                .headlineSmall!
+                .color!, BlendMode.srcIn),)),
+          'center' =>
+          (context.loc.alignCenter, SvgPicture.asset(
+            'assets/icons/text_style_toolbar/center_alignment.svg', fit: BoxFit.scaleDown,
+            colorFilter: ColorFilter.mode(currentStateValue ?
+            Theme
+                .of(context)
+                .brightness == Brightness.light ?
+            Colors.white :
+            Colors.black : Theme
+                .of(context)
+                .textTheme
+                .headlineSmall!
+                .color!, BlendMode.srcIn),)),
+          'justify' =>
+          (context.loc.alignJustify, SvgPicture.asset(
+            'assets/icons/text_style_toolbar/justified_alignment.svg', fit: BoxFit.scaleDown,
+            colorFilter: ColorFilter.mode(currentStateValue ?
+            Theme
+                .of(context)
+                .brightness == Brightness.light ?
+            Colors.white :
+            Colors.black : Theme
+                .of(context)
+                .textTheme
+                .headlineSmall!
+                .color!, BlendMode.srcIn),)),
           Object() => throw ArgumentError(widget.attribute.value),
-          null => (context.loc.alignCenter, Icons.format_align_center),
+          null =>
+          (context.loc.alignCenter, SvgPicture.asset(
+            'assets/icons/text_style_toolbar/center_alignment.svg', fit: BoxFit.scaleDown,
+            colorFilter: ColorFilter.mode(currentStateValue ?
+            Theme
+                .of(context)
+                .brightness == Brightness.light ?
+            Colors.white :
+            Colors.black : Theme
+                .of(context)
+                .textTheme
+                .headlineSmall!
+                .color!, BlendMode.srcIn),), ),
         };
       default:
         throw ArgumentError(
           'Could not find the default tooltip for '
-          '${widget.attribute.toString()}',
+              '${widget.attribute.toString()}',
         );
     }
   }
@@ -94,7 +221,7 @@ class QuillToolbarToggleStyleButtonState
   String get defaultTooltip => _defaultTooltipAndIconData.$1;
 
   @override
-  IconData get defaultIconData => _defaultTooltipAndIconData.$2;
+  Widget get defaultIconData => _defaultTooltipAndIconData.$2;
 
   void _onPressed() {
     _toggleAttribute();
@@ -157,23 +284,19 @@ class QuillToolbarToggleStyleButtonState
   }
 }
 
-Widget defaultToggleStyleButtonBuilder(
-  BuildContext context,
-  Attribute attribute,
-  IconData icon,
-  bool? isToggled,
-  VoidCallback? onPressed,
-  VoidCallback? afterPressed, [
-  double iconSize = kDefaultIconSize,
-  double iconButtonFactor = kDefaultIconButtonFactor,
-  QuillIconTheme? iconTheme,
-]) {
+Widget defaultToggleStyleButtonBuilder(BuildContext context,
+    Attribute attribute,
+    Widget icon,
+    bool? isToggled,
+    VoidCallback? onPressed,
+    VoidCallback? afterPressed, [
+      double iconSize = kDefaultIconSize,
+      double iconButtonFactor = kDefaultIconButtonFactor,
+      QuillIconTheme? iconTheme,
+    ]) {
   final isEnabled = onPressed != null;
   return QuillToolbarIconButton(
-    icon: Icon(
-      icon,
-      size: iconSize * iconButtonFactor,
-    ),
+    icon: icon,
     isSelected: isEnabled ? isToggled == true : false,
     onPressed: onPressed,
     afterPressed: afterPressed,

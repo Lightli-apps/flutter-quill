@@ -42,7 +42,7 @@ class QuillToolbarSelectHeaderStyleButtonsState
   String get defaultTooltip => context.loc.headerStyle;
 
   @override
-  IconData get defaultIconData => Icons.question_mark_outlined;
+  Widget get defaultIconData => Icon(Icons.question_mark_outlined);
 
   Style get _selectionStyle => controller.getSelectionStyle();
 

@@ -5,12 +5,11 @@ import '../base_button/base_value_button.dart';
 import '../base_toolbar.dart' show QuillToolbarIconButton;
 import '../config/simple_toolbar_configurations.dart';
 
-typedef QuillToolbarIndentBaseButton = QuillToolbarBaseButton<
-    QuillToolbarIndentButtonOptions, QuillToolbarIndentButtonExtraOptions>;
+typedef QuillToolbarIndentBaseButton
+    = QuillToolbarBaseButton<QuillToolbarIndentButtonOptions, QuillToolbarIndentButtonExtraOptions>;
 
 typedef QuillToolbarIndentBaseButtonState<W extends QuillToolbarIndentButton>
-    = QuillToolbarCommonButtonState<W, QuillToolbarIndentButtonOptions,
-        QuillToolbarIndentButtonExtraOptions>;
+    = QuillToolbarCommonButtonState<W, QuillToolbarIndentButtonOptions, QuillToolbarIndentButtonExtraOptions>;
 
 class QuillToolbarIndentButton extends QuillToolbarIndentBaseButton {
   const QuillToolbarIndentButton({
@@ -23,20 +22,16 @@ class QuillToolbarIndentButton extends QuillToolbarIndentBaseButton {
   final bool isIncrease;
 
   @override
-  QuillToolbarIndentButtonState createState() =>
-      QuillToolbarIndentButtonState();
+  QuillToolbarIndentButtonState createState() => QuillToolbarIndentButtonState();
 }
 
 class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
   @override
-  String get defaultTooltip => widget.isIncrease
-      ? context.loc.increaseIndent
-      : context.loc.decreaseIndent;
+  String get defaultTooltip => widget.isIncrease ? context.loc.increaseIndent : context.loc.decreaseIndent;
 
   @override
-  IconData get defaultIconData => widget.isIncrease
-      ? Icons.format_indent_increase
-      : Icons.format_indent_decrease;
+  Widget get defaultIconData =>
+      widget.isIncrease ? Icon(Icons.format_indent_increase) : Icon(Icons.format_indent_decrease);
 
   void _sharedOnPressed() {
     widget.controller.indentSelection(widget.isIncrease);
@@ -44,8 +39,7 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
 
   @override
   Widget build(BuildContext context) {
-    final childBuilder =
-        options.childBuilder ?? baseButtonExtraOptions?.childBuilder;
+    final childBuilder = options.childBuilder ?? baseButtonExtraOptions?.childBuilder;
 
     if (childBuilder != null) {
       return childBuilder(
@@ -64,11 +58,7 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
     // final iconColor = iconTheme?.iconUnselectedFillColor;
     return QuillToolbarIconButton(
       tooltip: tooltip,
-      icon: Icon(
-        iconData,
-        size: iconSize * iconButtonFactor,
-        // color: iconColor,
-      ),
+      icon: iconData,
       isSelected: false,
       onPressed: _sharedOnPressed,
       afterPressed: afterButtonPressed,
