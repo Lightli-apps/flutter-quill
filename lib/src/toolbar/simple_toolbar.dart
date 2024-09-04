@@ -163,6 +163,7 @@ class QuillSimpleToolbar extends StatelessWidget implements PreferredSizeWidget 
                   controller: controller,
                   isBackground: false,
                   options: toolbarConfigurations.buttonOptions.color,
+                  selectableColorsText: configurations.selectableColorsText,
                 ),
               SizedBox(
                 height: 10.h,
@@ -172,6 +173,7 @@ class QuillSimpleToolbar extends StatelessWidget implements PreferredSizeWidget 
                   options: toolbarConfigurations.buttonOptions.backgroundColor,
                   controller: controller,
                   isBackground: true,
+                  selectableColorsBackground: configurations.selectableColorsBackground,
                 ),
             ],
           ),
