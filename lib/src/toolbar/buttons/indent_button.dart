@@ -33,7 +33,7 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
   @override
   Widget get defaultIconData => widget.isIncrease
       ? SvgPicture.asset(
-          'assets/icons/text_style_toolbar/bold_icon.svg',
+          'assets/icons/text_style_toolbar/indent_paragraph.svg',
           fit: BoxFit.scaleDown,
         )
       : const Icon(Icons.format_indent_decrease);
