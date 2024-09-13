@@ -33,7 +33,7 @@ class SelectableColorQuill extends StatelessWidget {
             ? 72.w
             : 42.w
             : isOn
-            ? 42.w
+            ? 72.w
             : 22.w,
         decoration: BoxDecoration(
           color: const Color(0xFFF6F6F6),
@@ -63,7 +63,7 @@ class SelectableColorQuill extends StatelessWidget {
                 ? 70.w
                 : 40.w
                 : isOn
-                ? 40.w
+                ? 70.w
                 : 20.w,
             height: isOn ? 25.h : 16.h,
             decoration: BoxDecoration(
