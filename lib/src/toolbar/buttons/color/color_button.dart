@@ -150,7 +150,9 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                     ? Theme.of(context).textTheme.headlineSmall!.color!
                     : widget.selectableColorsText.elementAt(index),
                 onDrag: (value) {
-                  if (value.localPosition.dx < 20.w * selectedTextColorIndex) {
+                  final initPosition = (20.w * selectedTextColorIndex + 70.w - 20.w * selectedTextColorIndex) / 2;
+                  if ((value.localPosition.dx < initPosition) &&
+                      value.localPosition.dx < 20.w * selectedTextColorIndex) {
                     setState(() {
                       if (selectedTextColorIndex > 0) {
                         selectedTextColorIndex--;
@@ -161,7 +163,8 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                         );
                       }
                     });
-                  } else if (value.localPosition.dx > 20.w * selectedTextColorIndex + 70.w) {
+                  } else if (value.localPosition.dx > 20.w * selectedTextColorIndex + 70.w &&
+                      (initPosition < value.localPosition.dx)) {
                     setState(() {
                       if (selectedTextColorIndex < widget.selectableColorsText.length - 1) {
                         selectedTextColorIndex++;
