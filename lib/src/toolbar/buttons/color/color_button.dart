@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/utils/color.dart';
 import '../../../document/attribute.dart';
@@ -51,8 +52,8 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
 
   Style get _selectionStyle => widget.controller.getSelectionStyle();
 
-  int selectedTextColor = 0;
-  int selectedBackgroundColor = 0;
+  int selectedTextColorIndex = 0;
+  int selectedBackgroundColorIndex = 0;
 
   void _didChangeEditingValue() {
     setState(() {
@@ -140,7 +141,7 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
     return !widget.isBackground
         ?
 
-        /// ----------- Forground colors ---------------
+        /// ----------- Foreground colors ---------------
         Row(
             children: List.generate(
               widget.selectableColorsText.length,
@@ -148,17 +149,32 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                 color: index == 0
                     ? Theme.of(context).textTheme.headlineSmall!.color!
                     : widget.selectableColorsText.elementAt(index),
+                onDrag: (value) {
+                  if (value.localPosition.dx < 20.w * selectedTextColorIndex) {
+                    setState(() {
+                      if (selectedTextColorIndex > 0) {
+                        selectedTextColorIndex--;
+                      }
+                    });
+                  } else if (value.localPosition.dx > 20.w * selectedTextColorIndex + 70.w) {
+                    setState(() {
+                      if (selectedTextColorIndex < widget.selectableColorsText.length - 1) {
+                        selectedTextColorIndex++;
+                      }
+                    });
+                  }
+                },
                 onClick: () {
                   setState(() {
-                    selectedTextColor = index;
-                    final selectedColor = widget.selectableColorsText.elementAt(selectedTextColor);
+                    selectedTextColorIndex = index;
+                    final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
                     final hex = colorToHex(selectedColor);
                     widget.controller.formatSelection(
                       ColorAttribute('#$hex'),
                     );
                   });
                 },
-                isOn: selectedTextColor == index,
+                isOn: selectedTextColorIndex == index,
                 borderLeft: index == 0,
                 borderRight: index == widget.selectableColorsText.length - 1,
               ),
@@ -177,19 +193,34 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                         ? Colors.white
                         : widget.selectableColorsBackground.elementAt(0)
                     : widget.selectableColorsBackground.elementAt(index),
+                onDrag: (value) {
+                  if (value.localPosition.dx < 40.w * selectedTextColorIndex) {
+                    setState(() {
+                      if (selectedTextColorIndex > 0) {
+                        selectedTextColorIndex--;
+                      }
+                    });
+                  } else if (value.localPosition.dx > 40.w * selectedTextColorIndex + 70.w) {
+                    setState(() {
+                      if (selectedTextColorIndex < widget.selectableColorsText.length - 1) {
+                        selectedTextColorIndex++;
+                      }
+                    });
+                  }
+                },
                 onClick: () {
                   setState(() {
-                    selectedBackgroundColor = index;
+                    selectedBackgroundColorIndex = index;
                     final selectedColor = index == 0
                         ? Colors.transparent
-                        : widget.selectableColorsBackground.elementAt(selectedBackgroundColor);
+                        : widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
                     final hex = colorToHex(selectedColor);
                     widget.controller.formatSelection(
                       BackgroundAttribute('#$hex'),
                     );
                   });
                 },
-                isOn: selectedBackgroundColor == index,
+                isOn: selectedBackgroundColorIndex == index,
                 borderLeft: index == 0,
                 borderRight: index == widget.selectableColorsBackground.length - 1,
                 showIcon: true,
