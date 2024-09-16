@@ -154,12 +154,22 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                     setState(() {
                       if (selectedTextColorIndex > 0) {
                         selectedTextColorIndex--;
+                        final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
+                        final hex = colorToHex(selectedColor);
+                        widget.controller.formatSelection(
+                          ColorAttribute('#$hex'),
+                        );
                       }
                     });
                   } else if (value.localPosition.dx > 20.w * selectedTextColorIndex + 70.w) {
                     setState(() {
                       if (selectedTextColorIndex < widget.selectableColorsText.length - 1) {
                         selectedTextColorIndex++;
+                        final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
+                        final hex = colorToHex(selectedColor);
+                        widget.controller.formatSelection(
+                          ColorAttribute('#$hex'),
+                        );
                       }
                     });
                   }
@@ -194,16 +204,30 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                         : widget.selectableColorsBackground.elementAt(0)
                     : widget.selectableColorsBackground.elementAt(index),
                 onDrag: (value) {
-                  if (value.localPosition.dx < 40.w * selectedTextColorIndex) {
+                  if (value.localPosition.dx < 40.w * selectedBackgroundColorIndex) {
                     setState(() {
-                      if (selectedTextColorIndex > 0) {
-                        selectedTextColorIndex--;
+                      if (selectedBackgroundColorIndex > 0) {
+                        selectedBackgroundColorIndex--;
+                        final selectedColor = index == 0
+                            ? Colors.transparent
+                            : widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
+                        final hex = colorToHex(selectedColor);
+                        widget.controller.formatSelection(
+                          BackgroundAttribute('#$hex'),
+                        );
                       }
                     });
-                  } else if (value.localPosition.dx > 40.w * selectedTextColorIndex + 70.w) {
+                  } else if (value.localPosition.dx > 40.w * selectedBackgroundColorIndex + 70.w) {
                     setState(() {
-                      if (selectedTextColorIndex < widget.selectableColorsText.length - 1) {
-                        selectedTextColorIndex++;
+                      if (selectedTextColorIndex < widget.selectableColorsBackground.length - 1) {
+                        selectedBackgroundColorIndex++;
+                        final selectedColor = index == 0
+                            ? Colors.transparent
+                            : widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
+                        final hex = colorToHex(selectedColor);
+                        widget.controller.formatSelection(
+                          BackgroundAttribute('#$hex'),
+                        );
                       }
                     });
                   }
