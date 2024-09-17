@@ -216,7 +216,7 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                     setState(() {
                       if (selectedBackgroundColorIndex > 0) {
                         selectedBackgroundColorIndex--;
-                        final selectedColor = index == 0
+                        final selectedColor = selectedBackgroundColorIndex == 0
                             ? Colors.transparent
                             : widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
                         final hex = colorToHex(selectedColor);
@@ -231,7 +231,7 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                     setState(() {
                       if (selectedBackgroundColorIndex < widget.selectableColorsBackground.length - 1) {
                         selectedBackgroundColorIndex++;
-                        final selectedColor = index == 0
+                        final selectedColor = selectedBackgroundColorIndex == 0
                             ? Colors.transparent
                             : widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
                         final hex = colorToHex(selectedColor);
