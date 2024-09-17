@@ -212,7 +212,7 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                     : widget.selectableColorsBackground.elementAt(index),
                 onDrag: (value) {
                   if ((value.globalPosition.dx < initialPositionBackgroundColor) &&
-                      value.globalPosition.dx < 20.w * selectedBackgroundColorIndex + backgroundColorPadding) {
+                      value.globalPosition.dx < 40.w * selectedBackgroundColorIndex + backgroundColorPadding) {
                     setState(() {
                       if (selectedBackgroundColorIndex > 0) {
                         selectedBackgroundColorIndex--;
@@ -221,10 +221,10 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                         widget.controller.formatSelection(ColorAttribute('#$hex'));
                       }
                       initialPositionBackgroundColor =
-                          35.w + 20.w * selectedBackgroundColorIndex + backgroundColorPadding;
+                          35.w + 40.w * selectedBackgroundColorIndex + backgroundColorPadding;
                     });
                   } else if (value.globalPosition.dx >
-                          20.w * selectedBackgroundColorIndex + 70.w + backgroundColorPadding &&
+                          40.w * selectedBackgroundColorIndex + 70.w + backgroundColorPadding &&
                       (initialPositionBackgroundColor < value.globalPosition.dx + backgroundColorPadding)) {
                     setState(() {
                       if (selectedBackgroundColorIndex < widget.selectableColorsBackground.length - 1) {
@@ -234,7 +234,7 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                         widget.controller.formatSelection(ColorAttribute('#$hex'));
                       }
                       initialPositionBackgroundColor =
-                          35.w + 20.w * selectedBackgroundColorIndex + backgroundColorPadding;
+                          35.w + 40.w * selectedBackgroundColorIndex + backgroundColorPadding;
                     });
                   }
                 },
@@ -242,7 +242,7 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                   setState(() {
                     selectedBackgroundColorIndex = index;
                     initialPositionBackgroundColor =
-                        35.w + 20.w * selectedBackgroundColorIndex + backgroundColorPadding;
+                        35.w + 40.w * selectedBackgroundColorIndex + backgroundColorPadding;
 
                     final selectedColor = index == 0
                         ? Colors.transparent
