@@ -55,6 +55,12 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
   int selectedTextColorIndex = 0;
   int selectedBackgroundColorIndex = 0;
 
+  double initialPositionTextColor = 35.w + 20.w; // widget width half + padding
+  double initialPositionBackgroundColor = 35.w + 25.w;
+
+  double textColorPadding = 20.w;
+  double backgroundColorPadding = 25.w;
+
   void _didChangeEditingValue() {
     setState(() {
       _isToggledColor = _getIsToggledColor(widget.controller.getSelectionStyle().attributes);
@@ -150,36 +156,34 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                     ? Theme.of(context).textTheme.headlineSmall!.color!
                     : widget.selectableColorsText.elementAt(index),
                 onDrag: (value) {
-                  final initPosition = (20.w * selectedTextColorIndex + 70.w - 20.w * selectedTextColorIndex) / 2;
-                  if ((value.localPosition.dx < initPosition) &&
-                      value.localPosition.dx < 20.w * selectedTextColorIndex) {
+                  if ((value.globalPosition.dx < initialPositionTextColor) &&
+                      value.globalPosition.dx < 20.w * selectedTextColorIndex + textColorPadding) {
                     setState(() {
                       if (selectedTextColorIndex > 0) {
                         selectedTextColorIndex--;
                         final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
                         final hex = colorToHex(selectedColor);
-                        widget.controller.formatSelection(
-                          ColorAttribute('#$hex'),
-                        );
+                        widget.controller.formatSelection(ColorAttribute('#$hex'));
                       }
+                      initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
                     });
-                  } else if (value.localPosition.dx > 20.w * selectedTextColorIndex + 70.w &&
-                      (initPosition < value.localPosition.dx)) {
+                  } else if (value.globalPosition.dx > 20.w * selectedTextColorIndex + 70.w + textColorPadding &&
+                      (initialPositionTextColor < value.globalPosition.dx + textColorPadding)) {
                     setState(() {
                       if (selectedTextColorIndex < widget.selectableColorsText.length - 1) {
                         selectedTextColorIndex++;
                         final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
                         final hex = colorToHex(selectedColor);
-                        widget.controller.formatSelection(
-                          ColorAttribute('#$hex'),
-                        );
+                        widget.controller.formatSelection(ColorAttribute('#$hex'));
                       }
+                      initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
                     });
                   }
                 },
                 onClick: () {
                   setState(() {
                     selectedTextColorIndex = index;
+                    initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
                     final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
                     final hex = colorToHex(selectedColor);
                     widget.controller.formatSelection(
@@ -207,37 +211,39 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                         : widget.selectableColorsBackground.elementAt(0)
                     : widget.selectableColorsBackground.elementAt(index),
                 onDrag: (value) {
-                  if (value.localPosition.dx < 40.w * selectedBackgroundColorIndex) {
+                  if ((value.globalPosition.dx < initialPositionBackgroundColor) &&
+                      value.globalPosition.dx < 20.w * selectedBackgroundColorIndex + backgroundColorPadding) {
                     setState(() {
                       if (selectedBackgroundColorIndex > 0) {
                         selectedBackgroundColorIndex--;
-                        final selectedColor = index == 0
-                            ? Colors.transparent
-                            : widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
+                        final selectedColor = widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
                         final hex = colorToHex(selectedColor);
-                        widget.controller.formatSelection(
-                          BackgroundAttribute('#$hex'),
-                        );
+                        widget.controller.formatSelection(ColorAttribute('#$hex'));
                       }
+                      initialPositionBackgroundColor =
+                          35.w + 20.w * selectedBackgroundColorIndex + backgroundColorPadding;
                     });
-                  } else if (value.localPosition.dx > 40.w * selectedBackgroundColorIndex + 70.w) {
+                  } else if (value.globalPosition.dx >
+                          20.w * selectedBackgroundColorIndex + 70.w + backgroundColorPadding &&
+                      (initialPositionBackgroundColor < value.globalPosition.dx + backgroundColorPadding)) {
                     setState(() {
-                      if (selectedTextColorIndex < widget.selectableColorsBackground.length - 1) {
+                      if (selectedBackgroundColorIndex < widget.selectableColorsBackground.length - 1) {
                         selectedBackgroundColorIndex++;
-                        final selectedColor = index == 0
-                            ? Colors.transparent
-                            : widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
+                        final selectedColor = widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
                         final hex = colorToHex(selectedColor);
-                        widget.controller.formatSelection(
-                          BackgroundAttribute('#$hex'),
-                        );
+                        widget.controller.formatSelection(ColorAttribute('#$hex'));
                       }
+                      initialPositionBackgroundColor =
+                          35.w + 20.w * selectedBackgroundColorIndex + backgroundColorPadding;
                     });
                   }
                 },
                 onClick: () {
                   setState(() {
                     selectedBackgroundColorIndex = index;
+                    initialPositionBackgroundColor =
+                        35.w + 20.w * selectedBackgroundColorIndex + backgroundColorPadding;
+
                     final selectedColor = index == 0
                         ? Colors.transparent
                         : widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
