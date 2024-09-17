@@ -216,9 +216,11 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                     setState(() {
                       if (selectedBackgroundColorIndex > 0) {
                         selectedBackgroundColorIndex--;
-                        final selectedColor = widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
+                        final selectedColor = index == 0
+                            ? Colors.transparent
+                            : widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
                         final hex = colorToHex(selectedColor);
-                        widget.controller.formatSelection(ColorAttribute('#$hex'));
+                        widget.controller.formatSelection(BackgroundAttribute('#$hex'));
                       }
                       initialPositionBackgroundColor =
                           35.w + 40.w * selectedBackgroundColorIndex + backgroundColorPadding;
@@ -229,9 +231,11 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                     setState(() {
                       if (selectedBackgroundColorIndex < widget.selectableColorsBackground.length - 1) {
                         selectedBackgroundColorIndex++;
-                        final selectedColor = widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
+                        final selectedColor = index == 0
+                            ? Colors.transparent
+                            : widget.selectableColorsBackground.elementAt(selectedBackgroundColorIndex);
                         final hex = colorToHex(selectedColor);
-                        widget.controller.formatSelection(ColorAttribute('#$hex'));
+                        widget.controller.formatSelection(BackgroundAttribute('#$hex'));
                       }
                       initialPositionBackgroundColor =
                           35.w + 40.w * selectedBackgroundColorIndex + backgroundColorPadding;
