@@ -38,10 +38,16 @@ class QuillToolbarHistoryButtonState extends QuillToolbarHistoryBaseButtonState 
       ? SvgPicture.asset(
           'assets/icons/text_style_toolbar/left_arrow.svg',
           fit: BoxFit.scaleDown,
+          colorFilter: ColorFilter.mode(
+              Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF3a3a3a),
+              BlendMode.srcIn),
         )
       : SvgPicture.asset(
           'assets/icons/text_style_toolbar/right_arrow.svg',
           fit: BoxFit.scaleDown,
+          colorFilter: ColorFilter.mode(
+              Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF3a3a3a),
+              BlendMode.srcIn),
         ));
 
   @override

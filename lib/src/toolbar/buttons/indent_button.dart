@@ -35,6 +35,9 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
       ? SvgPicture.asset(
           'assets/icons/text_style_toolbar/indent_paragraph.svg',
           fit: BoxFit.scaleDown,
+          colorFilter: ColorFilter.mode(
+              Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF3a3a3a),
+              BlendMode.srcIn),
         )
       : const Icon(Icons.format_indent_decrease);
 

@@ -9,16 +9,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../config/simple_toolbar_configurations.dart';
 import '../base_button/base_value_button.dart';
 
-
-typedef QuillToolbarClearFormatBaseButton = QuillToolbarBaseButton<
-    QuillToolbarClearFormatButtonOptions,
-    QuillToolbarClearFormatButtonExtraOptions
->;
+typedef QuillToolbarClearFormatBaseButton
+    = QuillToolbarBaseButton<QuillToolbarClearFormatButtonOptions, QuillToolbarClearFormatButtonExtraOptions>;
 
 typedef QuillToolbarClearFormatBaseButtonState<W extends QuillToolbarClearFormatButton>
-= QuillToolbarCommonButtonState<W,
-    QuillToolbarClearFormatButtonOptions,
-    QuillToolbarClearFormatButtonExtraOptions>;
+    = QuillToolbarCommonButtonState<W, QuillToolbarClearFormatButtonOptions, QuillToolbarClearFormatButtonExtraOptions>;
 
 class QuillToolbarClearFormatButton extends QuillToolbarClearFormatBaseButton {
   const QuillToolbarClearFormatButton({
@@ -27,21 +22,20 @@ class QuillToolbarClearFormatButton extends QuillToolbarClearFormatBaseButton {
     super.key,
   });
 
-
   @override
-  QuillToolbarClearFormatButtonState createState() =>
-      QuillToolbarClearFormatButtonState();
+  QuillToolbarClearFormatButtonState createState() => QuillToolbarClearFormatButtonState();
 }
 
 class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButtonState {
   @override
-  String get defaultTooltip =>
-      context.loc.clearFormat;
+  String get defaultTooltip => context.loc.clearFormat;
 
   @override
-  Widget get defaultIconData =>
-      SvgPicture.asset('assets/icons/text_style_toolbar/no_paragraph.svg',
+  Widget get defaultIconData => SvgPicture.asset(
+        'assets/icons/text_style_toolbar/no_paragraph.svg',
         fit: BoxFit.scaleDown,
+        colorFilter: ColorFilter.mode(
+            Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF3a3a3a), BlendMode.srcIn),
         // colorFilter: ColorFilter.mode(
         //     !(widget.controller.getSelectionStyle().containsKey('indent') ||
         //         widget.controller.getSelectionStyle().containsKey('bullet') ||
@@ -57,7 +51,6 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
         //         .headlineSmall!
         //         .color!, BlendMode.srcIn)
       );
-
 
   void _sharedOnPressed() {
     final attributes = <Attribute>{};
@@ -75,9 +68,7 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
 
   @override
   Widget build(BuildContext context) {
-    final childBuilder =
-        options.childBuilder ?? baseButtonExtraOptions?.childBuilder;
-
+    final childBuilder = options.childBuilder ?? baseButtonExtraOptions?.childBuilder;
 
     if (childBuilder != null) {
       return childBuilder(
@@ -93,19 +84,16 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
       );
     }
 
-
     // final iconColor = iconTheme?.iconUnselectedFillColor;
 
     final isSelected = !(controller.getSelectionStyle().containsKey('indent') ||
         controller.getSelectionStyle().containsKey('bullet') ||
         controller.getSelectionStyle().containsKey('ordered'));
 
-
     return QuillToolbarIconButton(
       tooltip: tooltip,
       //tooltip: tooltip(context),
-      icon:
-      iconData,
+      icon: iconData,
       //iconData(context),
       isSelected: false,
       onPressed: _sharedOnPressed,
@@ -116,7 +104,6 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
     );
   }
 }
-
 
 // class QuillToolbarClearFormatButton extends QuillToolbarBaseButton {
 //   const QuillToolbarClearFormatButton({
@@ -180,4 +167,3 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
 //   String Function(BuildContext context) get getDefaultTooltip =>
 //           (context) => context.loc.clearFormat;
 // }
-

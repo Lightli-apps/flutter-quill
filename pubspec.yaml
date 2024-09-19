@@ -83,5 +83,5 @@ flutter:
   generate: true
 
   assets:
-    - assets/text_style_toolbar/
+    - assets/icons/text_style_toolbar/
 
