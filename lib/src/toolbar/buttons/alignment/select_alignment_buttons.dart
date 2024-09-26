@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../controller/quill_controller.dart';
 import '../../../document/attribute.dart';
 import '../../base_toolbar.dart';
@@ -26,22 +26,26 @@ class QuillToolbarSelectAlignmentButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: _attrbuites
-          .map((e) => QuillToolbarToggleStyleButton(
-                controller: controller,
-                attribute: e,
-                options: QuillToolbarToggleStyleButtonOptions(
-                  iconData: options.iconData,
-                  iconSize: options.iconSize,
-                  iconButtonFactor: options.iconButtonFactor,
-                  afterButtonPressed: options.afterButtonPressed,
-                  iconTheme: options.iconTheme,
-                  tooltip: options.tooltip,
-                ),
-              ))
-          .toList(),
+    return SizedBox(
+      width: 150.w,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: _attrbuites
+            .map((e) => QuillToolbarToggleStyleButton(
+                  controller: controller,
+                  attribute: e,
+                  options: QuillToolbarToggleStyleButtonOptions(
+                    iconData: options.iconData,
+                    iconSize: options.iconSize,
+                    iconButtonFactor: options.iconButtonFactor,
+                    afterButtonPressed: options.afterButtonPressed,
+                    iconTheme: options.iconTheme,
+                    tooltip: options.tooltip,
+                  ),
+                ))
+            .toList(),
+      ),
     );
   }
 }
