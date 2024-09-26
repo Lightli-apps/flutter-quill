@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../extensions.dart';
 import '../../document/attribute.dart';
 import '../../l10n/extensions/localizations_ext.dart';
@@ -140,13 +140,13 @@ class QuillToolbarFontFamilyButtonState extends QuillToolbarBaseButtonState<Quil
             });
           },
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding:  EdgeInsets.symmetric(horizontal: 5.w),
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
+              padding:  EdgeInsets.symmetric(
+                horizontal: 10.w,
               ),
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                borderRadius:  BorderRadius.all(Radius.circular(20.r)),
                 color: currentValue == _getKeyName(rawItemsMap.values.elementAt(index))
                     ? Theme.of(context).brightness == Brightness.light
                         ? const Color(0xFF3A3A3a)
