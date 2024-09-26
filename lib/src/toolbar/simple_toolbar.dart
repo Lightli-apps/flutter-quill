@@ -98,7 +98,7 @@ class QuillSimpleToolbar extends StatelessWidget implements PreferredSizeWidget 
             ),
           if (configurations.showBoldButton)
             SizedBox(
-              width: 10.w,
+              width: 2.w,
             ),
           if (configurations.showItalicButton)
             QuillToolbarToggleStyleButton(
@@ -108,7 +108,7 @@ class QuillSimpleToolbar extends StatelessWidget implements PreferredSizeWidget 
             ),
           if (configurations.showItalicButton)
             SizedBox(
-              width: 10.w,
+              width: 2.w,
             ),
           if (configurations.showUnderLineButton)
             QuillToolbarToggleStyleButton(
@@ -118,7 +118,7 @@ class QuillSimpleToolbar extends StatelessWidget implements PreferredSizeWidget 
             ),
           if (configurations.showUnderLineButton)
             SizedBox(
-              width: 10.w,
+              width: 2.w,
             ),
           if (configurations.showStrikeThrough)
             QuillToolbarToggleStyleButton(
