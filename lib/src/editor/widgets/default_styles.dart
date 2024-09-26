@@ -245,10 +245,7 @@ class DefaultStyles {
   final Map<String, Color>? palette;
 
   static DefaultStyles getInstance(BuildContext context) {
-    final themeData = Theme.of(context).copyWith(
-        textTheme: TextTheme(
-            headlineSmall:
-                TextStyle(color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white)));
+    final themeData = Theme.of(context);
     final defaultTextStyle = DefaultTextStyle.of(context);
     final baseStyle = defaultTextStyle.style.copyWith(
       fontSize: 16,
