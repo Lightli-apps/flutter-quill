@@ -151,69 +151,50 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
         Row(
             children: List.generate(
               widget.selectableColorsText.length,
-              (index) {
-                final isLightMode = Theme.of(context).brightness == Brightness.light;
-                return SelectableColorQuill(
-                  color: index == 0
-                      ? isLightMode
-                          ? Colors.black
-                          : Colors.white
-                      : widget.selectableColorsText.elementAt(index),
-                  onDrag: (value) {
-                    if ((value.globalPosition.dx < initialPositionTextColor) &&
-                        value.globalPosition.dx < 20.w * selectedTextColorIndex + textColorPadding) {
-                      setState(() {
-                        if (selectedTextColorIndex == 0) {
-                          final selectedColor = selectedTextColorIndex == 0
-                              ? isLightMode
-                                  ? Colors.black
-                                  : Colors.white
-                              : widget.selectableColorsText.elementAt(selectedTextColorIndex);
-                          final hex = colorToHex(selectedColor);
-                          widget.controller.formatSelection(
-                            ColorAttribute('#$hex'),
-                          );
-                        } else if (selectedTextColorIndex > 0) {
-                          selectedTextColorIndex--;
-                          final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
-                          final hex = colorToHex(selectedColor);
-                          widget.controller.formatSelection(ColorAttribute('#$hex'));
-                        }
-                        initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
-                      });
-                    } else if (value.globalPosition.dx > 20.w * selectedTextColorIndex + 70.w + textColorPadding &&
-                        (initialPositionTextColor < value.globalPosition.dx + textColorPadding)) {
-                      setState(() {
-                        if (selectedTextColorIndex < widget.selectableColorsText.length - 1) {
-                          selectedTextColorIndex++;
-                          final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
-                          final hex = colorToHex(selectedColor);
-                          widget.controller.formatSelection(ColorAttribute('#$hex'));
-                        }
-                        initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
-                      });
-                    }
-                  },
-                  onClick: () {
+              (index) => SelectableColorQuill(
+                color: index == 0
+                    ? Theme.of(context).textTheme.headlineSmall!.color!
+                    : widget.selectableColorsText.elementAt(index),
+                onDrag: (value) {
+                  if ((value.globalPosition.dx < initialPositionTextColor) &&
+                      value.globalPosition.dx < 20.w * selectedTextColorIndex + textColorPadding) {
                     setState(() {
-                      selectedTextColorIndex = index;
+                      if (selectedTextColorIndex > 0) {
+                        selectedTextColorIndex--;
+                        final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
+                        final hex = colorToHex(selectedColor);
+                        widget.controller.formatSelection(ColorAttribute('#$hex'));
+                      }
                       initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
-                      final selectedColor = selectedTextColorIndex == 0
-                          ? isLightMode
-                              ? Colors.black
-                              : Colors.white
-                          : widget.selectableColorsText.elementAt(selectedTextColorIndex);
-                      final hex = colorToHex(selectedColor);
-                      widget.controller.formatSelection(
-                        ColorAttribute('#$hex'),
-                      );
                     });
-                  },
-                  isOn: selectedTextColorIndex == index,
-                  borderLeft: index == 0,
-                  borderRight: index == widget.selectableColorsText.length - 1,
-                );
-              },
+                  } else if (value.globalPosition.dx > 20.w * selectedTextColorIndex + 70.w + textColorPadding &&
+                      (initialPositionTextColor < value.globalPosition.dx + textColorPadding)) {
+                    setState(() {
+                      if (selectedTextColorIndex < widget.selectableColorsText.length - 1) {
+                        selectedTextColorIndex++;
+                        final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
+                        final hex = colorToHex(selectedColor);
+                        widget.controller.formatSelection(ColorAttribute('#$hex'));
+                      }
+                      initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
+                    });
+                  }
+                },
+                onClick: () {
+                  setState(() {
+                    selectedTextColorIndex = index;
+                    initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
+                    final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
+                    final hex = colorToHex(selectedColor);
+                    widget.controller.formatSelection(
+                      ColorAttribute('#$hex'),
+                    );
+                  });
+                },
+                isOn: selectedTextColorIndex == index,
+                borderLeft: index == 0,
+                borderRight: index == widget.selectableColorsText.length - 1,
+              ),
             ),
           )
         :

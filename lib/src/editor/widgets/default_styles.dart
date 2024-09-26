@@ -149,8 +149,7 @@ class InlineCodeStyle {
   }
 
   @override
-  int get hashCode => Object.hash(style, header1, header2, header3, header4,
-      header5, header6, backgroundColor, radius);
+  int get hashCode => Object.hash(style, header1, header2, header3, header4, header5, header6, backgroundColor, radius);
 }
 
 @immutable
@@ -163,8 +162,7 @@ class DefaultListBlockStyle extends DefaultTextBlockStyle {
     super.decoration,
     this.checkboxUIBuilder, {
     this.indentWidthBuilder = TextBlockUtils.defaultIndentWidthBuilder,
-    this.numberPointWidthBuilder =
-        TextBlockUtils.defaultNumberPointWidthBuilder,
+    this.numberPointWidthBuilder = TextBlockUtils.defaultNumberPointWidthBuilder,
   });
 
   final QuillCheckboxBuilder? checkboxUIBuilder;
@@ -247,7 +245,10 @@ class DefaultStyles {
   final Map<String, Color>? palette;
 
   static DefaultStyles getInstance(BuildContext context) {
-    final themeData = Theme.of(context);
+    final themeData = Theme.of(context).copyWith(
+        textTheme: TextTheme(
+            headlineSmall:
+                TextStyle(color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white)));
     final defaultTextStyle = DefaultTextStyle.of(context);
     final baseStyle = defaultTextStyle.style.copyWith(
       fontSize: 16,
