@@ -87,7 +87,9 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
     selectedBackgroundColorIndex =
         getIndexOfSelectedColor(widget.lastSelectedBackgroundColor, widget.selectableColorsBackground);
 
-    widget.controller.formatSelection(ColorAttribute(widget.lastSelectedTextColor));
+    final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
+    final hex = colorToHex(selectedColor);
+    widget.controller.formatSelection(ColorAttribute('#$hex'));
 
     initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
     initialPositionBackgroundColor = 35.w + 40.w * selectedBackgroundColorIndex + backgroundColorPadding;
