@@ -251,7 +251,6 @@ class DefaultStyles {
       fontSize: 16,
       height: 1.15,
       decoration: TextDecoration.none,
-      color: Theme.of(context).brightness == Brightness.light ? const Color(0xFF3a3a3a) : Colors.white,
     );
     const baseHorizontalSpacing = HorizontalSpacing(0, 0);
     const baseVerticalSpacing = VerticalSpacing(6, 0);
