@@ -229,7 +229,7 @@ class QuillEditorState extends State<QuillEditor> implements EditorTextSelection
   Widget build(BuildContext context) {
     final theme = Theme.of(context).copyWith(
         textTheme: TextTheme(
-            headlineSmall:
+            bodyLarge:
                 TextStyle(color: Theme.of(context).brightness == Brightness.light ? Colors.black : Colors.white)));
     final selectionTheme = configurations.textSelectionThemeData ?? TextSelectionTheme.of(context);
 

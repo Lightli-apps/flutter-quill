@@ -153,7 +153,7 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
               widget.selectableColorsText.length,
               (index) => SelectableColorQuill(
                 color: index == 0
-                    ? Theme.of(context).textTheme.headlineSmall!.color!
+                    ? Theme.of(context).textTheme.bodyLarge!.color!
                     : widget.selectableColorsText.elementAt(index),
                 onDrag: (value) {
                   if ((value.globalPosition.dx < initialPositionTextColor) &&
