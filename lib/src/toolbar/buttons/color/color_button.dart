@@ -28,8 +28,8 @@ class QuillToolbarColorButton extends QuillToolbarColorBaseButton {
     required this.isBackground,
     this.selectableColorsText = const [],
     this.selectableColorsBackground = const [],
-    this.lastSelectedTextColor,
-    this.lastSelectedBackgroundColor,
+    this.lastSelectedTextColor = '',
+    this.lastSelectedBackgroundColor ='',
     super.options = const QuillToolbarColorButtonOptions(),
     super.key,
   });
@@ -38,8 +38,8 @@ class QuillToolbarColorButton extends QuillToolbarColorBaseButton {
   final bool isBackground;
   final List<Color> selectableColorsText;
   final List<Color> selectableColorsBackground;
-  final Color? lastSelectedTextColor;
-  final Color? lastSelectedBackgroundColor;
+  final String lastSelectedTextColor;
+  final String lastSelectedBackgroundColor;
 
   @override
   QuillToolbarColorButtonState createState() => QuillToolbarColorButtonState();
@@ -334,8 +334,9 @@ String colorToHex(Color color) {
   return color.value.toRadixString(16).padLeft(8, '0').toUpperCase();
 }
 
-int getIndexOfSelectedColor(Color? selectedColor, List<Color> colorsList) {
-  if (selectedColor != null) {
+int getIndexOfSelectedColor(String selectedColorHex, List<Color> colorsList) {
+  if (selectedColorHex.isNotEmpty) {
+    final selectedColor = hexToColor(selectedColorHex);
     return colorsList.indexOf(selectedColor);
   }
   return 0;
