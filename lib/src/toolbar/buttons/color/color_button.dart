@@ -28,6 +28,8 @@ class QuillToolbarColorButton extends QuillToolbarColorBaseButton {
     required this.isBackground,
     this.selectableColorsText = const [],
     this.selectableColorsBackground = const [],
+    this.lastSelectedTextColor,
+    this.lastSelectedBackgroundColor,
     super.options = const QuillToolbarColorButtonOptions(),
     super.key,
   });
@@ -36,6 +38,8 @@ class QuillToolbarColorButton extends QuillToolbarColorBaseButton {
   final bool isBackground;
   final List<Color> selectableColorsText;
   final List<Color> selectableColorsBackground;
+  final Color? lastSelectedTextColor;
+  final Color? lastSelectedBackgroundColor;
 
   @override
   QuillToolbarColorButtonState createState() => QuillToolbarColorButtonState();
@@ -78,6 +82,13 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
     _isWhite = _isToggledColor && _selectionStyle.attributes['color']!.value == '#ffffff';
     _isWhiteBackground = _isToggledBackground && _selectionStyle.attributes['background']!.value == '#ffffff';
     widget.controller.addListener(_didChangeEditingValue);
+
+    selectedTextColorIndex = getIndexOfSelectedColor(widget.lastSelectedTextColor, widget.selectableColorsText);
+    selectedBackgroundColorIndex =
+        getIndexOfSelectedColor(widget.lastSelectedBackgroundColor, widget.selectableColorsBackground);
+
+    initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
+    initialPositionBackgroundColor = 35.w + 40.w * selectedBackgroundColorIndex + backgroundColorPadding;
   }
 
   bool _getIsToggledColor(Map<String, Attribute> attrs) {
@@ -321,4 +332,11 @@ Color hexToColor(String? hexString) {
 
 String colorToHex(Color color) {
   return color.value.toRadixString(16).padLeft(8, '0').toUpperCase();
+}
+
+int getIndexOfSelectedColor(Color? selectedColor, List<Color> colorsList) {
+  if (selectedColor != null) {
+    return colorsList.indexOf(selectedColor);
+  }
+  return 0;
 }

@@ -133,6 +133,8 @@ class QuillSimpleToolbarConfigurations extends QuillSharedToolbarProperties {
     this.searchButtonType = SearchButtonType.modern,
     this.selectableColorsText = const [],
     this.selectableColorsBackground = const [],
+    this.lastSelectedTextColor,
+    this.lastSelectedBackgroundColor,
 
     /// The decoration to use for the toolbar.
     super.decoration,
@@ -226,6 +228,8 @@ class QuillSimpleToolbarConfigurations extends QuillSharedToolbarProperties {
 
   final List<Color> selectableColorsText;
   final List<Color> selectableColorsBackground;
+  final Color? lastSelectedTextColor;
+  final Color? lastSelectedBackgroundColor;
 
   /// This activates a functionality that is only implemented in [flutter_quill] and is NOT originally
   /// used in the [Quill Js API]. So it could cause conflicts if you use this attribute with the original Delta format of Quill Js
