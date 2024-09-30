@@ -170,6 +170,12 @@ class QuillSimpleToolbar extends StatelessWidget implements PreferredSizeWidget 
             children: [
               if (configurations.showColorButton)
                 QuillToolbarColorButton(
+                  theme: Theme.of(context).copyWith(
+                      textTheme: TextTheme(
+                          bodySmall: TextStyle(
+                              color: Theme.of(context).brightness == Brightness.light
+                                  ? const Color(0xFF3a3a3a)
+                                  : Colors.white))),
                   controller: controller,
                   isBackground: false,
                   options: toolbarConfigurations.buttonOptions.color,
@@ -181,6 +187,12 @@ class QuillSimpleToolbar extends StatelessWidget implements PreferredSizeWidget 
               ),
               if (configurations.showBackgroundColorButton)
                 QuillToolbarColorButton(
+                  theme: Theme.of(context).copyWith(
+                      textTheme: TextTheme(
+                          bodySmall: TextStyle(
+                              color: Theme.of(context).brightness == Brightness.light
+                                  ? const Color(0xFF3a3a3a)
+                                  : Colors.white))),
                   options: toolbarConfigurations.buttonOptions.backgroundColor,
                   controller: controller,
                   isBackground: true,
