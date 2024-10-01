@@ -196,9 +196,9 @@ class QuillToolbarToggleStyleButtonState extends QuillToolbarToggleStyleBaseButt
                 .color!, BlendMode.srcIn),)),
           Object() => throw ArgumentError(widget.attribute.value),
           null =>
-          (context.loc.alignCenter, SvgPicture.asset(
-            'assets/icons/text_style_toolbar/center_alignment.svg', fit: BoxFit.scaleDown,
-            colorFilter: ColorFilter.mode(currentStateValue ?
+          (context.loc.alignLeft, SvgPicture.asset(
+            'assets/icons/text_style_toolbar/left_alignment.svg', fit: BoxFit.scaleDown,
+            colorFilter: ColorFilter.mode(widget.attribute.value == null ?
             Theme
                 .of(context)
                 .brightness == Brightness.light ?
