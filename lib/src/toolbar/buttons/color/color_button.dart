@@ -183,7 +183,10 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                     setState(() {
                       if (selectedTextColorIndex < widget.selectableColorsText.length - 1) {
                         selectedTextColorIndex++;
-                        final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
+
+                        final selectedColor = selectedTextColorIndex == 0
+                            ? widget.controller.editorConfigurations.customStyles!.paragraph!.style.color!
+                            : widget.selectableColorsText.elementAt(selectedTextColorIndex);
                         final hex = colorToHex(selectedColor);
                         widget.controller.formatSelection(ColorAttribute('#$hex'));
                       }
@@ -195,7 +198,9 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                   setState(() {
                     selectedTextColorIndex = index;
                     initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
-                    final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
+                    final selectedColor = selectedTextColorIndex == 0
+                        ? widget.controller.editorConfigurations.customStyles!.paragraph!.style.color!
+                        : widget.selectableColorsText.elementAt(selectedTextColorIndex);
                     final hex = colorToHex(selectedColor);
                     widget.controller.formatSelection(
                       ColorAttribute('#$hex'),
