@@ -27,6 +27,8 @@ class QuillToolbarClearFormatButton extends QuillToolbarClearFormatBaseButton {
 }
 
 class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButtonState {
+  bool isSelected = false;
+
   @override
   String get defaultTooltip => context.loc.clearFormat;
 
@@ -63,7 +65,10 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
       controller.formatSelection(Attribute.clone(attribute, null));
     }
 
-    setState(() {});
+    setState(() {
+      isSelected = !(controller.getSelectionStyle().containsKey(Attribute.list.key) ||
+          controller.getSelectionStyle().containsKey(Attribute.indent.key));
+    });
   }
 
   @override
@@ -85,9 +90,6 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
     }
 
     // final iconColor = iconTheme?.iconUnselectedFillColor;
-
-    final isSelected = !(controller.getSelectionStyle().containsKey(Attribute.list.key) ||
-        controller.getSelectionStyle().containsKey(Attribute.indent.key) );
 
     return QuillToolbarIconButton(
       tooltip: tooltip,
