@@ -86,21 +86,16 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
 
     // final iconColor = iconTheme?.iconUnselectedFillColor;
 
-    final isSelected = !(controller.getSelectionStyle().containsKey('indent') ||
-        controller.getSelectionStyle().containsKey('bullet') ||
-        controller.getSelectionStyle().containsKey('ordered'));
+    final isSelected = !(controller.getSelectionStyle().containsKey(Attribute.list.key) ||
+        controller.getSelectionStyle().containsKey(Attribute.indent.key) );
 
     return QuillToolbarIconButton(
       tooltip: tooltip,
-      //tooltip: tooltip(context),
       icon: iconData,
-      //iconData(context),
-      isSelected: false,
+      isSelected: isSelected,
       onPressed: _sharedOnPressed,
       afterPressed: afterButtonPressed,
-      //afterPressed: afterButtonPressed(context),
       iconTheme: iconTheme,
-      // iconTheme: iconTheme(context),
     );
   }
 }

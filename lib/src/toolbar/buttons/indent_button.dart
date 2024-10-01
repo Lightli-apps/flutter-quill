@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../flutter_quill.dart';
 import '../../l10n/extensions/localizations_ext.dart';
 import '../base_button/base_value_button.dart';
 import '../base_toolbar.dart' show QuillToolbarIconButton;
@@ -67,7 +68,7 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
     return QuillToolbarIconButton(
       tooltip: tooltip,
       icon: iconData,
-      isSelected: false,
+      isSelected: controller.getSelectionStyle().containsKey(Attribute.indent.key),
       onPressed: _sharedOnPressed,
       afterPressed: afterButtonPressed,
       iconTheme: iconTheme,
