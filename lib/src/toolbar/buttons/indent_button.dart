@@ -68,7 +68,7 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
     return QuillToolbarIconButton(
       tooltip: tooltip,
       icon: iconData,
-      isSelected: controller.getSelectionStyle().containsKey(Attribute.indent.key),
+      isSelected: false,
       onPressed: _sharedOnPressed,
       afterPressed: afterButtonPressed,
       iconTheme: iconTheme,
