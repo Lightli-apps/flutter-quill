@@ -26,11 +26,10 @@ class QuillToolbarColorButton extends QuillToolbarColorBaseButton {
   const QuillToolbarColorButton({
     required super.controller,
     required this.isBackground,
-    required this.theme,
     this.selectableColorsText = const [],
     this.selectableColorsBackground = const [],
     this.lastSelectedTextColor = '',
-    this.lastSelectedBackgroundColor ='',
+    this.lastSelectedBackgroundColor = '',
     super.options = const QuillToolbarColorButtonOptions(),
     super.key,
   });
@@ -41,8 +40,6 @@ class QuillToolbarColorButton extends QuillToolbarColorBaseButton {
   final List<Color> selectableColorsBackground;
   final String lastSelectedTextColor;
   final String lastSelectedBackgroundColor;
-
-  final ThemeData theme;
 
   @override
   QuillToolbarColorButtonState createState() => QuillToolbarColorButtonState();
@@ -167,7 +164,7 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
               widget.selectableColorsText.length,
               (index) => SelectableColorQuill(
                 color: index == 0
-                    ? Theme.of(context).textTheme.bodySmall!.color!
+                    ? widget.controller.editorConfigurations.customStyles!.paragraph!.style.color!
                     : widget.selectableColorsText.elementAt(index),
                 onDrag: (value) {
                   if ((value.globalPosition.dx < initialPositionTextColor) &&
