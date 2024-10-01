@@ -184,11 +184,13 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                       if (selectedTextColorIndex < widget.selectableColorsText.length - 1) {
                         selectedTextColorIndex++;
 
-                        final selectedColor = selectedTextColorIndex == 0
-                            ? widget.controller.editorConfigurations.customStyles!.paragraph!.style.color!
-                            : widget.selectableColorsText.elementAt(selectedTextColorIndex);
-                        final hex = colorToHex(selectedColor);
-                        widget.controller.formatSelection(ColorAttribute('#$hex'));
+                        if (selectedTextColorIndex == 0) {
+                          widget.controller.formatSelection(const ColorAttribute(null));
+                        } else {
+                          final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
+                          final hex = colorToHex(selectedColor);
+                          widget.controller.formatSelection(ColorAttribute('#$hex'));
+                        }
                       }
                       initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
                     });
@@ -198,13 +200,15 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
                   setState(() {
                     selectedTextColorIndex = index;
                     initialPositionTextColor = 35.w + 20.w * selectedTextColorIndex + textColorPadding;
-                    final selectedColor = selectedTextColorIndex == 0
-                        ? widget.controller.editorConfigurations.customStyles!.paragraph!.style.color!
-                        : widget.selectableColorsText.elementAt(selectedTextColorIndex);
-                    final hex = colorToHex(selectedColor);
-                    widget.controller.formatSelection(
-                      ColorAttribute('#$hex'),
-                    );
+                    if (selectedTextColorIndex == 0) {
+                      widget.controller.formatSelection(const ColorAttribute(null));
+                    } else {
+                      final selectedColor = widget.selectableColorsText.elementAt(selectedTextColorIndex);
+                      final hex = colorToHex(selectedColor);
+                      widget.controller.formatSelection(
+                        ColorAttribute('#$hex'),
+                      );
+                    }
                   });
                 },
                 isOn: selectedTextColorIndex == index,
