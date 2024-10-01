@@ -25,31 +25,28 @@ class QuillToolbarIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-      GestureDetector(
-        onTap: onPressed != null
-            ? () {
-          onPressed?.call();
-          afterPressed?.call();
-        }
-            : null,
-        child: Container(
-          width: 30.w,
-          height: 30.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
-              Radius.circular(20.r),
-            ),
-            color: isSelected
-                ? Theme
-                .of(context)
-                .brightness == Brightness.light
-                ? const Color(0xFF474747)
-                : const Color(0xFFF6F6F6)
-                : Colors.transparent,
+    return InkWell(
+      onTap: onPressed != null
+          ? () {
+              onPressed?.call();
+              afterPressed?.call();
+            }
+          : null,
+      child: Container(
+        width: 30.w,
+        height: 30.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(20.r),
           ),
-          child: icon,
+          color: isSelected
+              ? Theme.of(context).brightness == Brightness.light
+                  ? const Color(0xFF474747)
+                  : const Color(0xFFF6F6F6)
+              : Colors.transparent,
         ),
-      );
+        child: icon,
+      ),
+    );
   }
 }
