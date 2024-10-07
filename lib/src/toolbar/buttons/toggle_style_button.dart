@@ -278,7 +278,11 @@ class QuillToolbarToggleStyleButtonState extends QuillToolbarToggleStyleBaseButt
         widget.attribute.key == Attribute.script.key ||
         widget.attribute.key == Attribute.align.key) {
       final attribute = attrs[widget.attribute.key];
+
       if (attribute == null) {
+        if (widget.attribute == Attribute.leftAlignment) {
+          return true;
+        }
         return false;
       }
       return attribute.value == widget.attribute.value;
