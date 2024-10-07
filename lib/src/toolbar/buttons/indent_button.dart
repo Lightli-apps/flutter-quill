@@ -46,6 +46,7 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
 
   void _sharedOnPressed() {
     widget.controller.indentSelection(widget.isIncrease);
+    setState(() {});
   }
 
   bool _getIsToggled() {
