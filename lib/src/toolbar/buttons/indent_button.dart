@@ -64,14 +64,29 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
       );
     }
 
-    // final iconColor = iconTheme?.iconUnselectedFillColor;
-    return QuillToolbarIconButton(
-      tooltip: tooltip,
-      icon: iconData,
-      isSelected: false,
-      onPressed: _sharedOnPressed,
-      afterPressed: afterButtonPressed,
-      iconTheme: iconTheme,
+    return QuillToolbarToggleStyleButton(
+      controller: controller,
+      attribute: Attribute.indent,
+      options: QuillToolbarToggleStyleButtonOptions(
+        iconData: options.iconData,
+        iconSize: options.iconSize,
+        iconButtonFactor: options.iconButtonFactor,
+        afterButtonPressed: options.afterButtonPressed,
+        iconTheme: options.iconTheme,
+        tooltip: options.tooltip,
+      ),
     );
+
+
+    /// Old button:
+    // final iconColor = iconTheme?.iconUnselectedFillColor;
+    // return QuillToolbarIconButton(
+    //   tooltip: tooltip,
+    //   icon: iconData,
+    //   isSelected: false,
+    //   onPressed: _sharedOnPressed,
+    //   afterPressed: afterButtonPressed,
+    //   iconTheme: iconTheme,
+    // );
   }
 }

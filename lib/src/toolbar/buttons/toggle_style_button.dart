@@ -43,6 +43,21 @@ class QuillToolbarToggleStyleButtonState extends QuillToolbarToggleStyleBaseButt
 
   (String, Widget) get _defaultTooltipAndIconData {
     switch (widget.attribute.key) {
+      case 'indent':
+        return (
+          context.loc.increaseIndent,
+          SvgPicture.asset(
+            'assets/icons/text_style_toolbar/indent_paragraph.svg',
+            fit: BoxFit.scaleDown,
+            colorFilter: ColorFilter.mode(
+                currentStateValue
+                    ? Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : Colors.black
+                    : Theme.of(context).textTheme.headlineSmall!.color!,
+                BlendMode.srcIn),
+          )
+        );
       case 'bold':
         return (
           context.loc.bold,
@@ -273,7 +288,8 @@ class QuillToolbarToggleStyleButtonState extends QuillToolbarToggleStyleBaseButt
   }
 
   bool _getIsToggled(Map<String, Attribute> attrs) {
-    if (widget.attribute.key == Attribute.list.key ||
+    if (widget.attribute.key == Attribute.indent.key ||
+        widget.attribute.key == Attribute.list.key ||
         widget.attribute.key == Attribute.header.key ||
         widget.attribute.key == Attribute.script.key ||
         widget.attribute.key == Attribute.align.key) {
