@@ -67,6 +67,7 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
     return QuillToolbarToggleStyleButton(
       controller: controller,
       attribute: Attribute.indent,
+      attributeOnPressed: _sharedOnPressed,
       options: QuillToolbarToggleStyleButtonOptions(
         iconData: options.iconData,
         iconSize: options.iconSize,
@@ -76,7 +77,6 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
         tooltip: options.tooltip,
       ),
     );
-
 
     /// Old button:
     // final iconColor = iconTheme?.iconUnselectedFillColor;

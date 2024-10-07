@@ -25,11 +25,13 @@ class QuillToolbarToggleStyleButton extends QuillToolbarToggleStyleBaseButton {
   const QuillToolbarToggleStyleButton({
     required super.controller,
     required this.attribute,
+    this.attributeOnPressed,
     super.options = const QuillToolbarToggleStyleButtonOptions(),
     super.key,
   });
 
   final Attribute attribute;
+  final Function()? attributeOnPressed;
 
   @override
   QuillToolbarToggleStyleButtonState createState() => QuillToolbarToggleStyleButtonState();
@@ -253,6 +255,9 @@ class QuillToolbarToggleStyleButtonState extends QuillToolbarToggleStyleBaseButt
   Widget get defaultIconData => _defaultTooltipAndIconData.$2;
 
   void _onPressed() {
+    if (widget.attributeOnPressed != null) {
+      widget.attributeOnPressed;
+    }
     _toggleAttribute();
     afterButtonPressed?.call();
   }
