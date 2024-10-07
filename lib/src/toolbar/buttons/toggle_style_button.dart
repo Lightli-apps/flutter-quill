@@ -253,7 +253,7 @@ class QuillToolbarToggleStyleButtonState extends QuillToolbarToggleStyleBaseButt
   Widget get defaultIconData => _defaultTooltipAndIconData.$2;
 
   void _onPressed() {
-    if (widget.attribute == Attribute.indent) {
+    if (widget.attribute.key == Attribute.indent.key) {
       widget.controller.indentSelection(true);
     }
     _toggleAttribute();
