@@ -31,6 +31,8 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
   @override
   String get defaultTooltip => widget.isIncrease ? context.loc.increaseIndent : context.loc.decreaseIndent;
 
+  Style get _selectionStyle => controller.getSelectionStyle();
+
   @override
   Widget get defaultIconData => widget.isIncrease
       ? SvgPicture.asset(
@@ -44,6 +46,12 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
 
   void _sharedOnPressed() {
     widget.controller.indentSelection(widget.isIncrease);
+  }
+
+  bool _getIsToggled() {
+    final attributes = _selectionStyle.attributes;
+    final attribute = attributes[Attribute.indent.key];
+    return attribute == null;
   }
 
   @override
@@ -64,28 +72,14 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
       );
     }
 
-    return QuillToolbarToggleStyleButton(
-      controller: controller,
-      attribute: Attribute.indent,
-      options: QuillToolbarToggleStyleButtonOptions(
-        iconData: options.iconData,
-        iconSize: options.iconSize,
-        iconButtonFactor: options.iconButtonFactor,
-        afterButtonPressed: options.afterButtonPressed,
-        iconTheme: options.iconTheme,
-        tooltip: options.tooltip,
-      ),
-    );
-
-    /// Old button:
     // final iconColor = iconTheme?.iconUnselectedFillColor;
-    // return QuillToolbarIconButton(
-    //   tooltip: tooltip,
-    //   icon: iconData,
-    //   isSelected: false,
-    //   onPressed: _sharedOnPressed,
-    //   afterPressed: afterButtonPressed,
-    //   iconTheme: iconTheme,
-    // );
+    return QuillToolbarIconButton(
+      tooltip: tooltip,
+      icon: iconData,
+      isSelected: _getIsToggled(),
+      onPressed: _sharedOnPressed,
+      afterPressed: afterButtonPressed,
+      iconTheme: iconTheme,
+    );
   }
 }
