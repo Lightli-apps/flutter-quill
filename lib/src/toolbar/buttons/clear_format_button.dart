@@ -58,13 +58,13 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
   }
 
   bool _getIsToggled() {
-    final attributes = <Attribute>{};
+    final attributes = <String>{};
     for (final style in controller.getAllSelectionStyles()) {
-      for (final attr in style.attributes.values) {
+      for (final attr in style.attributes.keys) {
         attributes.add(attr);
       }
     }
-    return attributes.contains(Attribute.indent) || attributes.contains(Attribute.list);
+    return attributes.contains(Attribute.indent.key) || attributes.contains(Attribute.list.key);
   }
 
   @override
