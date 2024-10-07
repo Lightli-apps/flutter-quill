@@ -51,7 +51,7 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
   bool _getIsToggled() {
     final attributes = _selectionStyle.attributes;
     final attribute = attributes[Attribute.indent.key];
-    return attribute == null;
+    return attribute != null;
   }
 
   @override
