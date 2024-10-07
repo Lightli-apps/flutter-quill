@@ -35,15 +35,20 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
 
   @override
   Widget get defaultIconData => widget.isIncrease
-      ? SvgPicture.asset('assets/icons/text_style_toolbar/indent_paragraph.svg',
+      ? SvgPicture.asset(
+          'assets/icons/text_style_toolbar/indent_paragraph.svg',
           fit: BoxFit.scaleDown,
           colorFilter: ColorFilter.mode(
-              _getIsToggled()
-                  ? Theme.of(context).brightness == Brightness.light
-                      ? Colors.white
-                      : Colors.black
-                  : Theme.of(context).textTheme.headlineSmall!.color!,
-              BlendMode.srcIn))
+              Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF3a3a3a),
+              BlendMode.srcIn),
+        )
+      // colorFilter: ColorFilter.mode(
+      //     _getIsToggled()
+      //         ? Theme.of(context).brightness == Brightness.light
+      //             ? Colors.white
+      //             : Colors.black
+      //         : Theme.of(context).textTheme.headlineSmall!.color!,
+      //     BlendMode.srcIn))
       : const Icon(Icons.format_indent_decrease);
 
   void _sharedOnPressed() {
@@ -79,7 +84,8 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
     return QuillToolbarIconButton(
       tooltip: tooltip,
       icon: iconData,
-      isSelected: _getIsToggled(),
+      isSelected: false,
+      // isSelected: _getIsToggled(),
       onPressed: _sharedOnPressed,
       afterPressed: afterButtonPressed,
       iconTheme: iconTheme,
