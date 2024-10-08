@@ -4,8 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../flutter_quill.dart';
 import '../../l10n/extensions/localizations_ext.dart';
 import '../base_button/base_value_button.dart';
-import '../base_toolbar.dart' show QuillToolbarIconButton;
-import '../config/simple_toolbar_configurations.dart';
 
 typedef QuillToolbarIndentBaseButton
     = QuillToolbarBaseButton<QuillToolbarIndentButtonOptions, QuillToolbarIndentButtonExtraOptions>;
@@ -29,9 +27,26 @@ class QuillToolbarIndentButton extends QuillToolbarIndentBaseButton {
 
 class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
   @override
-  String get defaultTooltip => widget.isIncrease ? context.loc.increaseIndent : context.loc.decreaseIndent;
+  String get defaultTooltip =>
+      widget.isIncrease ? context.loc.increaseIndent : context.loc.decreaseIndent;
 
   Style get _selectionStyle => controller.getSelectionStyle();
+
+  bool get _isSelected => _selectionStyle.attributes[Attribute.indent.key] != null;
+
+  void _controllerListener() => setState(() {});
+
+  @override
+  void initState() {
+    controller.addListener(_controllerListener);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(_controllerListener);
+    super.dispose();
+  }
 
   @override
   Widget get defaultIconData => widget.isIncrease
@@ -39,28 +54,16 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
           'assets/icons/text_style_toolbar/indent_paragraph.svg',
           fit: BoxFit.scaleDown,
           colorFilter: ColorFilter.mode(
-              Theme.of(context).brightness == Brightness.dark ? Colors.white : const Color(0xFF3a3a3a),
+              _isSelected
+                  ? Theme.of(context).brightness == Brightness.light
+                      ? Colors.white
+                      : Colors.black
+                  : Theme.of(context).textTheme.headlineSmall!.color!,
               BlendMode.srcIn),
         )
-      // colorFilter: ColorFilter.mode(
-      //     _getIsToggled()
-      //         ? Theme.of(context).brightness == Brightness.light
-      //             ? Colors.white
-      //             : Colors.black
-      //         : Theme.of(context).textTheme.headlineSmall!.color!,
-      //     BlendMode.srcIn))
       : const Icon(Icons.format_indent_decrease);
 
-  void _sharedOnPressed() {
-    widget.controller.indentSelection(widget.isIncrease);
-    setState(() {});
-  }
-
-  bool _getIsToggled() {
-    final attributes = _selectionStyle.attributes;
-    final attribute = attributes[Attribute.indent.key];
-    return attribute != null;
-  }
+  void _sharedOnPressed() => widget.controller.indentSelection(widget.isIncrease);
 
   @override
   Widget build(BuildContext context) {
@@ -80,12 +83,10 @@ class QuillToolbarIndentButtonState extends QuillToolbarIndentBaseButtonState {
       );
     }
 
-    // final iconColor = iconTheme?.iconUnselectedFillColor;
     return QuillToolbarIconButton(
       tooltip: tooltip,
       icon: iconData,
-      isSelected: false,
-      // isSelected: _getIsToggled(),
+      isSelected: _isSelected,
       onPressed: _sharedOnPressed,
       afterPressed: afterButtonPressed,
       iconTheme: iconTheme,
