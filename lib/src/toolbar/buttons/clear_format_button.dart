@@ -7,12 +7,11 @@ import '../base_button/base_value_button.dart';
 import '../base_toolbar.dart' show QuillToolbarIconButton;
 import '../config/simple_toolbar_configurations.dart';
 
-typedef QuillToolbarClearFormatBaseButton = QuillToolbarBaseButton<
-    QuillToolbarClearFormatButtonOptions, QuillToolbarClearFormatButtonExtraOptions>;
+typedef QuillToolbarClearFormatBaseButton
+    = QuillToolbarBaseButton<QuillToolbarClearFormatButtonOptions, QuillToolbarClearFormatButtonExtraOptions>;
 
 typedef QuillToolbarClearFormatBaseButtonState<W extends QuillToolbarClearFormatButton>
-    = QuillToolbarCommonButtonState<W, QuillToolbarClearFormatButtonOptions,
-        QuillToolbarClearFormatButtonExtraOptions>;
+    = QuillToolbarCommonButtonState<W, QuillToolbarClearFormatButtonOptions, QuillToolbarClearFormatButtonExtraOptions>;
 
 class QuillToolbarClearFormatButton extends QuillToolbarClearFormatBaseButton {
   const QuillToolbarClearFormatButton({
@@ -28,7 +27,7 @@ class QuillToolbarClearFormatButton extends QuillToolbarClearFormatBaseButton {
 class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButtonState {
   void _controllerListener() => setState(() {});
 
-  bool get _isSelected => !controller.getAllSelectionStyles().any((e) => e.isNotEmpty);
+  bool get _isSelected => _getIsToggled();
 
   @override
   void initState() {
@@ -69,6 +68,18 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
     for (final attribute in attributes) {
       controller.formatSelection(Attribute.clone(attribute, null));
     }
+  }
+
+  bool _getIsToggled() {
+    final attributes = controller.getSelectionStyle();
+
+    if (attributes.isEmpty) {
+      return true;
+    }
+
+    return !(attributes.keys.contains(Attribute.list.key) ||
+        attributes.keys.contains(Attribute.indent.key) ||
+        attributes.keys.contains(Attribute.align.key));
   }
 
   @override
