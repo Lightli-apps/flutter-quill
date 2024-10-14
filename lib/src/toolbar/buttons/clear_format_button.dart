@@ -78,8 +78,7 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
     }
 
     return !(attributes.keys.contains(Attribute.list.key) ||
-        attributes.keys.contains(Attribute.indent.key) ||
-        attributes.keys.contains(Attribute.align.key));
+        attributes.keys.contains(Attribute.indent.key));
   }
 
   @override
