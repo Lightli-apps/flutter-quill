@@ -81,20 +81,7 @@ class QuillSimpleToolbar extends StatelessWidget implements PreferredSizeWidget 
               options: toolbarConfigurations.buttonOptions.fontSize,
               controller: controller,
             ),
-          if (configurations.showFontSize)
-            Column(
-              children: [
-                Divider(
-                  thickness: 1.h,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? const Color(0xfff6f6f6)
-                      : const Color(0xff474747),
-                ),
-                SizedBox(
-                  height: 4.h,
-                ),
-              ],
-            ),
+
           if (configurations.showFontFamily)
             QuillToolbarFontFamilyButton(
               options: toolbarConfigurations.buttonOptions.fontFamily,
