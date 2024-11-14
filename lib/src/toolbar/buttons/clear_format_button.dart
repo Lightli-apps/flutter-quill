@@ -46,7 +46,7 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
 
   @override
   Widget get defaultIconData => SvgPicture.asset(
-        'assets/icons/text_style_toolbar/no_paragraph.svg',
+        'assets/icons/text_style_toolbar/justified_alignment.svg',
         fit: BoxFit.scaleDown,
         colorFilter: ColorFilter.mode(
             _isSelected
@@ -77,8 +77,7 @@ class QuillToolbarClearFormatButtonState extends QuillToolbarClearFormatBaseButt
       return true;
     }
 
-    return !(attributes.keys.contains(Attribute.list.key) ||
-        attributes.keys.contains(Attribute.indent.key));
+    return !(attributes.keys.contains(Attribute.list.key) || attributes.keys.contains(Attribute.indent.key));
   }
 
   @override
