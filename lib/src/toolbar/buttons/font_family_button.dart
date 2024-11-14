@@ -37,7 +37,7 @@ class QuillToolbarFontFamilyButtonState extends QuillToolbarBaseButtonState<Quil
     return options.initialValue ??
         widget.options.defaultDisplayText ??
         widget.defaultDisplayText ??
-        'Montserrat (default)';
+        'Montserrat';
     // context.loc.font;
   }
 
