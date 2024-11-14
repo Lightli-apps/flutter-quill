@@ -34,10 +34,7 @@ class QuillToolbarFontFamilyButtonState extends QuillToolbarBaseButtonState<Quil
   }
 
   String get _defaultDisplayText {
-    return options.initialValue ??
-        widget.options.defaultDisplayText ??
-        widget.defaultDisplayText ??
-        'Montserrat';
+    return options.initialValue ?? widget.options.defaultDisplayText ?? widget.defaultDisplayText ?? 'Montserrat';
     // context.loc.font;
   }
 
@@ -116,6 +113,7 @@ class QuillToolbarFontFamilyButtonState extends QuillToolbarBaseButtonState<Quil
     return SizedBox(
       height: 30,
       child: ListView.builder(
+        clipBehavior: Clip.none,
         scrollDirection: Axis.horizontal,
         itemCount: rawItemsMap.length ?? 0,
         itemBuilder: (context, index) => GestureDetector(
@@ -140,13 +138,13 @@ class QuillToolbarFontFamilyButtonState extends QuillToolbarBaseButtonState<Quil
             });
           },
           child: Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 5.w),
+            padding: EdgeInsets.symmetric(horizontal: 5.w),
             child: Container(
-              padding:  EdgeInsets.symmetric(
+              padding: EdgeInsets.symmetric(
                 horizontal: 10.w,
               ),
               decoration: BoxDecoration(
-                borderRadius:  BorderRadius.all(Radius.circular(20.r)),
+                borderRadius: BorderRadius.all(Radius.circular(20.r)),
                 color: currentValue == _getKeyName(rawItemsMap.values.elementAt(index))
                     ? Theme.of(context).brightness == Brightness.light
                         ? const Color(0xFF3A3A3a)
