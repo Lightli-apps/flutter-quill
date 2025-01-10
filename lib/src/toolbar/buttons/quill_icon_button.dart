@@ -1,8 +1,6 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../theme/quill_icon_theme.dart';
 
 class QuillToolbarIconButton extends StatelessWidget {
@@ -28,14 +26,14 @@ class QuillToolbarIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      splashColor: Theme.of(context).brightness == Brightness.light ? const Color(0xFF474747) : const Color(0xFFF6F6F6),
+      splashColor: const Color(0xFFCCCCCC),
       onTap: onPressed != null
           ? () {
               onPressed?.call();
               afterPressed?.call();
             }
           : null,
-      child: Container(
+      child: Ink(
         width: 30.w,
         height: 30.h,
         decoration: BoxDecoration(
