@@ -116,53 +116,59 @@ class QuillToolbarFontFamilyButtonState extends QuillToolbarBaseButtonState<Quil
         clipBehavior: Clip.none,
         scrollDirection: Axis.horizontal,
         itemCount: rawItemsMap.length ?? 0,
-        itemBuilder: (context, index) => GestureDetector(
-          onTap: () {
-            final newValue = rawItemsMap.values.elementAt(index);
-            final keyName = _getKeyName(newValue);
-            setState(() {
-              if (keyName != 'Clear') {
-                currentValue = keyName ?? _defaultDisplayText;
-              } else {
-                currentValue = _defaultDisplayText;
-              }
-              if (keyName != null) {
-                controller.formatSelection(
-                  Attribute.fromKeyValue(
-                    Attribute.font.key,
-                    newValue == 'Clear' ? null : newValue,
+        itemBuilder: (context, index) => Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.all(Radius.circular(20.r)),
+          child: InkWell(
+            borderRadius: BorderRadius.all(Radius.circular(20.r)),
+            splashColor: const Color(0xFFCCCCCC),
+            onTap: () {
+              final newValue = rawItemsMap.values.elementAt(index);
+              final keyName = _getKeyName(newValue);
+              setState(() {
+                if (keyName != 'Clear') {
+                  currentValue = keyName ?? _defaultDisplayText;
+                } else {
+                  currentValue = _defaultDisplayText;
+                }
+                if (keyName != null) {
+                  controller.formatSelection(
+                    Attribute.fromKeyValue(
+                      Attribute.font.key,
+                      newValue == 'Clear' ? null : newValue,
+                    ),
+                  );
+                  options.onSelected?.call(newValue);
+                }
+              });
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: Ink(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 10.w,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.r)),
+                  color: currentValue == _getKeyName(rawItemsMap.values.elementAt(index))
+                      ? Theme.of(context).brightness == Brightness.light
+                          ? const Color(0xFF3A3A3a)
+                          : Colors.white
+                      : Theme.of(context).brightness == Brightness.light
+                          ? const Color(0xFFF6F6F6)
+                          : const Color(0xFF474747),
+                ),
+                child: Center(
+                  child: Text(
+                    rawItemsMap.keys.elementAt(index) ?? 'font',
+                    style: TextStyle(
+                        color: currentValue == _getKeyName(rawItemsMap.values.elementAt(index))
+                            ? Theme.of(context).brightness == Brightness.light
+                                ? Colors.white
+                                : Colors.black
+                            : Theme.of(context).textTheme.headlineSmall?.color!,
+                        fontFamily: rawItemsMap.values.elementAt(index)),
                   ),
-                );
-                options.onSelected?.call(newValue);
-              }
-            });
-          },
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.w),
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10.w,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20.r)),
-                color: currentValue == _getKeyName(rawItemsMap.values.elementAt(index))
-                    ? Theme.of(context).brightness == Brightness.light
-                        ? const Color(0xFF3A3A3a)
-                        : Colors.white
-                    : Theme.of(context).brightness == Brightness.light
-                        ? const Color(0xFFF6F6F6)
-                        : const Color(0xFF474747),
-              ),
-              child: Center(
-                child: Text(
-                  rawItemsMap.keys.elementAt(index) ?? 'font',
-                  style: TextStyle(
-                      color: currentValue == _getKeyName(rawItemsMap.values.elementAt(index))
-                          ? Theme.of(context).brightness == Brightness.light
-                              ? Colors.white
-                              : Colors.black
-                          : Theme.of(context).textTheme.headlineSmall?.color!,
-                      fontFamily: rawItemsMap.values.elementAt(index)),
                 ),
               ),
             ),
