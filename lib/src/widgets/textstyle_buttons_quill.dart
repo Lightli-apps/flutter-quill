@@ -24,6 +24,7 @@ class TextstyleButtonQuill extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: width.w),
       child: Material(
+        color: Colors.transparent,
         borderRadius: BorderRadius.all(Radius.circular(20.r)),
         child: InkWell(
           borderRadius: BorderRadius.all(Radius.circular(20.r)),
