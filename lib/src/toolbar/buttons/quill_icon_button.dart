@@ -31,6 +31,9 @@ class QuillToolbarIconButton extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         splashColor: const Color(0xFFCCCCCC),
+        borderRadius: BorderRadius.all(
+          Radius.circular(20.r),
+        ),
         onTap: onPressed != null
             ? () {
                 onPressed?.call();
