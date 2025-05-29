@@ -27,7 +27,6 @@ class QuillToolbarIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log('QUILL_TOOLBAR_ICON_BUTTON: ${icon.toString().substring(51, 100)}');
     return InkWell(
       splashColor: Theme.of(context).brightness == Brightness.light ? const Color(0xFF474747) : const Color(0xFFF6F6F6),
       onTap: onPressed != null

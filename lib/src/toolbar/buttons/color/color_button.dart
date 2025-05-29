@@ -101,6 +101,9 @@ class QuillToolbarColorButtonState extends QuillToolbarColorBaseButtonState {
 
   @override
   void didUpdateWidget(covariant QuillToolbarColorButton oldWidget) {
+    selectedTextColorIndex = getIndexOfSelectedColor(widget.lastSelectedTextColor, widget.selectableColorsText);
+    selectedBackgroundColorIndex =
+        getIndexOfSelectedColor(widget.lastSelectedBackgroundColor, widget.selectableColorsBackground);
     super.didUpdateWidget(oldWidget);
     if (oldWidget.controller != widget.controller) {
       oldWidget.controller.removeListener(_didChangeEditingValue);

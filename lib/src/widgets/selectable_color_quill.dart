@@ -38,7 +38,7 @@ class SelectableColorQuill extends StatelessWidget {
                     ? 72.w
                     : 22.w,
             decoration: BoxDecoration(
-              color: const Color(0xFFF6F6F6),
+              color: Theme.of(context).brightness == Brightness.light ? Colors.white : const Color(0xFF3a3a3a),
               borderRadius: borderLeft && !isOn
                   ? BorderRadius.only(
                       topLeft: Radius.circular(5.r),
