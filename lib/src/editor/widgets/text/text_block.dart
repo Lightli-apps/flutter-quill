@@ -215,6 +215,48 @@ class EditableTextBlock extends StatelessWidget {
     return children.toList(growable: false);
   }
 
+  Color? _getLastUsedColor(Line currentLine) {
+    try {
+      // Look through all lines in the current block for the last used color
+      final blockLines = Iterable.castFrom<dynamic, Line>(block.children);
+      final linesList = blockLines.toList();
+      
+      // Find current line index
+      int currentIndex = -1;
+      for (int i = 0; i < linesList.length; i++) {
+        if (linesList[i] == currentLine) {
+          currentIndex = i;
+          break;
+        }
+      }
+      
+      // Search backwards from current line
+      for (int i = currentIndex - 1; i >= 0; i--) {
+        final line = linesList[i];
+        final delta = line.toDelta();
+        for (final op in delta.toList()) {
+          if (op.attributes != null && op.attributes!.containsKey(Attribute.color.key)) {
+            return hexToColor(op.attributes![Attribute.color.key]);
+          }
+        }
+      }
+      
+      // If still no color found, search forward (for cases where color might be in later lines)
+      for (int i = currentIndex + 1; i < linesList.length; i++) {
+        final line = linesList[i];
+        final delta = line.toDelta();
+        for (final op in delta.toList()) {
+          if (op.attributes != null && op.attributes!.containsKey(Attribute.color.key)) {
+            return hexToColor(op.attributes![Attribute.color.key]);
+          }
+        }
+      }
+    } catch (e) {
+      // If any error occurs, return null to fall back to default behavior
+    }
+    return null;
+  }
+
   Widget? _buildLeading({
     required BuildContext context,
     required Line line,
@@ -229,17 +271,17 @@ class EditableTextBlock extends StatelessWidget {
         defaultStyles.lists?.numberPointWidthBuilder ??
             TextBlockUtils.defaultNumberPointWidthBuilder;
 
-    // Of the color button
-    final fontColor =
-        line.toDelta().operations.first.attributes?[Attribute.color.key] != null
-            ? hexToColor(
-                line
-                    .toDelta()
-                    .operations
-                    .first
-                    .attributes?[Attribute.color.key],
-              )
-            : null;
+    // Of the color button - check all operations in the line for color
+    Color? fontColor;
+    final lineOperations = line.toDelta().toList();
+    for (final op in lineOperations) {
+      if (op.attributes != null && op.attributes!.containsKey(Attribute.color.key)) {
+        fontColor = hexToColor(op.attributes![Attribute.color.key]);
+        break;
+      }
+    }
+    // If no color found in current line, check previous lines
+    fontColor ??= _getLastUsedColor(line);
 
     // Of the size button
     final size =
@@ -262,6 +304,23 @@ class EditableTextBlock extends StatelessWidget {
         attribute == Attribute.checked || attribute == Attribute.unchecked;
     final isCodeBlock = attrs.containsKey(Attribute.codeBlock.key);
     if (attribute == null) return null;
+    
+    // If still no color and this is a list item, try to get color from the controller's selection style
+    // This handles the case where list formatting was just applied to colored text
+    if (fontColor == null && (isUnordered || isOrdered)) {
+      try {
+        // Try to get the controller from context to check current selection style
+        final quillEditor = context.findAncestorWidgetOfExactType<QuillEditor>();
+        if (quillEditor != null) {
+          final selectionStyle = quillEditor.controller.getSelectionStyle();
+          if (selectionStyle.attributes.containsKey(Attribute.color.key)) {
+            fontColor = hexToColor(selectionStyle.attributes[Attribute.color.key]?.value);
+          }
+        }
+      } catch (e) {
+        // Ignore errors, fall back to default
+      }
+    }
     final leadingConfigurations = LeadingConfigurations(
       attribute: attribute,
       attrs: attrs,
