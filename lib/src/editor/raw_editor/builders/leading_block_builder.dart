@@ -28,6 +28,7 @@ class LeadingConfigurations {
     this.lineSize,
     this.enabled,
     this.uiBuilder,
+    this.textAlign,
   });
 
   final Attribute attribute;
@@ -47,6 +48,7 @@ class LeadingConfigurations {
   final bool? enabled;
   final bool value;
   final void Function(bool) onCheckboxTap;
+  final TextAlign? textAlign;
 
   String? get getIndexNumberByIndent {
     if (index == null) return null;

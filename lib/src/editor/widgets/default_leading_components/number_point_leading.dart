@@ -11,4 +11,5 @@ Widget numberPointLeading(LeadingConfigurations config) =>
       attrs: config.attrs,
       width: config.width!,
       padding: config.padding!,
+      textAlign: config.textAlign,
     );

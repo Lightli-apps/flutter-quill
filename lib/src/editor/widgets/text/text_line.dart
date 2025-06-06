@@ -1180,9 +1180,46 @@ class RenderEditableTextLine extends RenderEditableBox {
         ? _resolvedPadding!.left
         : _resolvedPadding!.right;
 
-    _body!.layout(innerConstraints, parentUsesSize: true);
+    // Adjust layout based on text alignment
+    final alignment = line.style.attributes[Attribute.align.key];
+    double bodyOffsetX = _resolvedPadding!.left;
+    BoxConstraints bodyConstraints = innerConstraints;
+
+    print('\n🔍 LIST ALIGNMENT DEBUG:');
+    print('📏 Original constraints: ${constraints}');
+    print('📏 Inner constraints: ${innerConstraints}');
+    print('📏 Resolved padding: ${_resolvedPadding}');
+    print('📏 Indent width: ${indentWidth}');
+    print('🎯 Alignment: ${alignment?.key} (${alignment?.value})');
+
+    if (_leading != null) {
+      if (alignment == Attribute.centerAlignment) {
+        // For center: give body full width and position it at start of available space
+        bodyOffsetX = 0;
+        bodyConstraints = constraints.deflate(EdgeInsets.only(
+          top: _resolvedPadding!.top,
+          bottom: _resolvedPadding!.bottom,
+        ));
+        print('🎯 CENTER: bodyOffsetX = $bodyOffsetX, bodyConstraints = $bodyConstraints');
+      } else if (alignment == Attribute.rightAlignment) {
+        // For right: give body full width and position it at start of available space
+        bodyOffsetX = 0;
+        bodyConstraints = constraints.deflate(EdgeInsets.only(
+          top: _resolvedPadding!.top,
+          bottom: _resolvedPadding!.bottom,
+        ));
+        print('🎯 RIGHT: bodyOffsetX = $bodyOffsetX, bodyConstraints = $bodyConstraints');
+      } else {
+        print('🎯 LEFT/DEFAULT: bodyOffsetX = $bodyOffsetX, bodyConstraints = $bodyConstraints');
+      }
+    }
+
+    _body!.layout(bodyConstraints, parentUsesSize: true);
     (_body!.parentData as BoxParentData).offset =
-        Offset(_resolvedPadding!.left, _resolvedPadding!.top);
+        Offset(bodyOffsetX, _resolvedPadding!.top);
+    
+    print('📦 Body size after layout: ${_body!.size}');
+    print('📦 Body offset: ${(_body!.parentData as BoxParentData).offset}');
 
     if (_leading != null) {
       final leadingConstraints = innerConstraints.copyWith(
@@ -1190,8 +1227,67 @@ class RenderEditableTextLine extends RenderEditableBox {
           maxWidth: indentWidth,
           maxHeight: _body!.size.height);
       _leading!.layout(leadingConstraints, parentUsesSize: true);
+
+      print('🎯 Leading constraints: $leadingConstraints');
+      print('🎯 Leading size after layout: ${_leading!.size}');
+
+      // Position leading based on text alignment
+      double leadingX = indentWidth - _leading!.size.width;
+      print('🎯 Initial leadingX (default): $leadingX');
+      
+      if (alignment == Attribute.centerAlignment) {
+        // For center: try to get text boxes to find actual text position
+        try {
+          final textSelection = TextSelection(baseOffset: 0, extentOffset: line.length - 1);
+          final textBoxes = _body!.getBoxesForSelection(textSelection);
+          if (textBoxes.isNotEmpty) {
+            final firstBox = textBoxes.first;
+            final textStartX = firstBox.left;
+            leadingX = textStartX - indentWidth;
+            print('🎯 CENTER CALC: textBoxes found, textStartX=$textStartX, final leadingX=$leadingX');
+          } else {
+            // Fallback to center calculation
+            final totalWidth = bodyConstraints.maxWidth;
+            final centerX = totalWidth / 2;
+            leadingX = centerX - indentWidth / 2;
+            print('🎯 CENTER CALC (fallback): totalWidth=$totalWidth, centerX=$centerX, final leadingX=$leadingX');
+          }
+        } catch (e) {
+          // Fallback to center calculation
+          final totalWidth = bodyConstraints.maxWidth;
+          final centerX = totalWidth / 2;
+          leadingX = centerX - indentWidth / 2;
+          print('🎯 CENTER CALC (error fallback): totalWidth=$totalWidth, centerX=$centerX, final leadingX=$leadingX, error=$e');
+        }
+      } else if (alignment == Attribute.rightAlignment) {
+        // For right: try to get text boxes to find actual text position
+        try {
+          final textSelection = TextSelection(baseOffset: 0, extentOffset: line.length - 1);
+          final textBoxes = _body!.getBoxesForSelection(textSelection);
+          if (textBoxes.isNotEmpty) {
+            final firstBox = textBoxes.first;
+            final textStartX = firstBox.left;
+            leadingX = textStartX - indentWidth;
+            print('🎯 RIGHT CALC: textBoxes found, textStartX=$textStartX, final leadingX=$leadingX');
+          } else {
+            // Fallback to right edge calculation
+            final totalWidth = bodyConstraints.maxWidth;
+            leadingX = totalWidth - indentWidth;
+            print('🎯 RIGHT CALC (fallback): totalWidth=$totalWidth, final leadingX=$leadingX');
+          }
+        } catch (e) {
+          // Fallback to right edge calculation
+          final totalWidth = bodyConstraints.maxWidth;
+          leadingX = totalWidth - indentWidth;
+          print('🎯 RIGHT CALC (error fallback): totalWidth=$totalWidth, final leadingX=$leadingX, error=$e');
+        }
+      }
+
       (_leading!.parentData as BoxParentData).offset =
-          Offset(0, _resolvedPadding!.top);
+          Offset(leadingX, _resolvedPadding!.top);
+      
+      print('🎯 Final leading offset: ${(_leading!.parentData as BoxParentData).offset}');
+      print('✅ LAYOUT COMPLETE\n');
     }
 
     size = constraints.constrain(Size(

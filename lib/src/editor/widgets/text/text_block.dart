@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import '../../../common/structs/horizontal_spacing.dart';
 import '../../../common/structs/vertical_spacing.dart';
 import '../../../common/utils/font.dart';
+import '../../../common/utils/string.dart';
 import '../../../controller/quill_controller.dart';
 import '../../../delta/delta_diff.dart';
 import '../../../document/attribute.dart';
@@ -293,9 +294,9 @@ class EditableTextBlock extends StatelessWidget {
             : null;
 
     // Of the alignment buttons
-    // final textAlign = line.style.attributes[Attribute.align.key]?.value != null
-    //     ? getTextAlign(line.style.attributes[Attribute.align.key]?.value)
-    //     : null;
+    final textAlign = line.style.attributes[Attribute.align.key]?.value != null
+        ? getTextAlign(line.style.attributes[Attribute.align.key]?.value)
+        : null;
     final attribute =
         attrs[Attribute.list.key] ?? attrs[Attribute.codeBlock.key];
     final isUnordered = attribute == Attribute.ul;
@@ -368,6 +369,7 @@ class EditableTextBlock extends StatelessWidget {
       onCheckboxTap: !isCheck
           ? (value) {}
           : (value) => onCheckboxTap(line.documentOffset, value),
+      textAlign: textAlign,
     );
     if (customLeadingBlockBuilder != null) {
       final leadingBlockNodeBuilder = customLeadingBlockBuilder?.call(

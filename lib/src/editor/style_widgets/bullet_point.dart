@@ -20,18 +20,29 @@ class QuillEditorBulletPoint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Adjust alignment based on text alignment
+    final bulletAlignment = switch (textAlign) {
+      TextAlign.center => Alignment.center,
+      TextAlign.right => Alignment.centerRight,
+      TextAlign.end => Alignment.centerRight,
+      TextAlign.left => Alignment.centerLeft,
+      TextAlign.start => Alignment.centerLeft,
+      _ => Alignment.centerLeft,
+    };
+
     return Container(
-      alignment: AlignmentDirectional.topEnd,
       width: width,
       padding: EdgeInsetsDirectional.only(end: padding),
       color: backgroundColor,
-      child: context.quillEditorConfigurations?.elementOptions.unorderedList
-              .customWidget ??
-          Text(
-            '•',
-            style: style,
-            textAlign: textAlign,
-          ),
+      child: Align(
+        alignment: bulletAlignment,
+        child: context.quillEditorConfigurations?.elementOptions.unorderedList
+                .customWidget ??
+            Text(
+              '•',
+              style: style,
+            ),
+      ),
     );
   }
 }

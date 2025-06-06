@@ -7,4 +7,5 @@ Widget bulletPointLeading(LeadingConfigurations config) =>
       style: config.style!,
       width: config.width!,
       padding: config.padding!,
+      textAlign: config.textAlign,
     );

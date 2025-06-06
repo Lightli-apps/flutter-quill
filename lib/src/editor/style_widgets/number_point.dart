@@ -29,33 +29,45 @@ class QuillEditorNumberPoint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Adjust alignment based on text alignment
+    final numberAlignment = switch (textAlign) {
+      TextAlign.center => Alignment.center,
+      TextAlign.right => Alignment.centerRight,
+      TextAlign.end => Alignment.centerRight,
+      TextAlign.left => Alignment.centerLeft,
+      TextAlign.start => Alignment.centerLeft,
+      _ => Alignment.centerLeft,
+    };
+
     if (!attrs.containsKey(Attribute.indent.key) && indentLevelCounts.isEmpty) {
       return Container(
-        alignment: AlignmentDirectional.topEnd,
         width: width,
         padding: EdgeInsetsDirectional.only(end: padding),
         color: backgroundColor,
+        child: Align(
+          alignment: numberAlignment,
+          child: context.quillEditorConfigurations?.elementOptions.orderedList
+                  .customWidget ??
+              Text(
+                withDot ? '$index.' : index,
+                style: style,
+              ),
+        ),
+      );
+    }
+    return Container(
+      width: width,
+      padding: EdgeInsetsDirectional.only(end: padding),
+      color: backgroundColor,
+      child: Align(
+        alignment: numberAlignment,
         child: context.quillEditorConfigurations?.elementOptions.orderedList
                 .customWidget ??
             Text(
               withDot ? '$index.' : index,
               style: style,
-              textAlign: textAlign,
             ),
-      );
-    }
-    return Container(
-      alignment: AlignmentDirectional.topEnd,
-      width: width,
-      padding: EdgeInsetsDirectional.only(end: padding),
-      color: backgroundColor,
-      child: context.quillEditorConfigurations?.elementOptions.orderedList
-              .customWidget ??
-          Text(
-            withDot ? '$index.' : index,
-            style: style,
-            textAlign: textAlign,
-          ),
+      ),
     );
   }
 }
