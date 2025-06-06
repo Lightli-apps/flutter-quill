@@ -20,7 +20,10 @@ class QuillEditorBulletPoint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Adjust alignment based on text alignment
+    // === BULLET ALIGNMENT WITHIN CONTAINER ===
+    // This ensures bullet aligns properly within its allocated space based on text alignment.
+    // Note: The main positioning is handled in text_line.dart performLayout().
+    // This just aligns the bullet within its own container.
     final bulletAlignment = switch (textAlign) {
       TextAlign.center => Alignment.center,
       TextAlign.right => Alignment.centerRight,
@@ -30,7 +33,8 @@ class QuillEditorBulletPoint extends StatelessWidget {
       _ => Alignment.centerLeft,
     };
 
-    final customWidget = context.quillEditorConfigurations?.elementOptions.unorderedList.customWidget;
+    final customWidget = context
+        .quillEditorConfigurations?.elementOptions.unorderedList.customWidget;
 
     return Container(
       width: width,

@@ -216,8 +216,6 @@ class EditableTextBlock extends StatelessWidget {
     return children.toList(growable: false);
   }
 
-
-
   Widget? _buildLeading({
     required BuildContext context,
     required Line line,
@@ -232,16 +230,22 @@ class EditableTextBlock extends StatelessWidget {
         defaultStyles.lists?.numberPointWidthBuilder ??
             TextBlockUtils.defaultNumberPointWidthBuilder;
 
-    // Of the color button - check all operations in the line for color
+    // === COLOR INHERITANCE FIX ===
+    // This section handles color for bullet points and numbers.
+    // It fixes the issue where applying color to new text affected previous list items.
+
+    // Step 1: Check if this line has explicit color attributes
     Color? fontColor;
     final lineOperations = line.toDelta().toList();
     for (final op in lineOperations) {
-      if (op.attributes != null && op.attributes!.containsKey(Attribute.color.key)) {
+      if (op.attributes != null &&
+          op.attributes!.containsKey(Attribute.color.key)) {
         fontColor = hexToColor(op.attributes![Attribute.color.key]);
         break;
       }
     }
-    // Don't use backward color scanning for list items to prevent color inheritance
+
+    // Note: We intentionally don't scan backwards for colors to prevent unwanted inheritance
     // Each list item should maintain its own color independently
 
     // Of the size button
@@ -265,12 +269,12 @@ class EditableTextBlock extends StatelessWidget {
         attribute == Attribute.checked || attribute == Attribute.unchecked;
     final isCodeBlock = attrs.containsKey(Attribute.codeBlock.key);
     if (attribute == null) return null;
-    
-    // If no explicit color found and this is a list item, check if this is the current editing line
-    // and if so, use the selection style color for new list items being created
+
+    // Step 2: For new list items being typed, inherit color from current selection
+    // This ensures that when user selects a color and creates a new list item,
+    // the bullet gets the selected color, but only for the current line being edited.
     if (fontColor == null && (isUnordered || isOrdered)) {
       try {
-        // Get selection information safely
         final selection = controller.selection;
         if (selection.isValid && !selection.isCollapsed) {
           // If there's a text selection, don't apply selection style color
@@ -279,16 +283,20 @@ class EditableTextBlock extends StatelessWidget {
           // Check if the cursor is on this line by comparing document offsets
           final selectionBase = selection.baseOffset;
           final lineStart = line.documentOffset;
-          final lineEnd = lineStart + line.length - 1; // -1 because line.length includes newline
-          
+          final lineEnd = lineStart +
+              line.length -
+              1; // -1 because line.length includes newline
+
           // If the cursor is positioned within this line
-          final cursorOnThisLine = selectionBase >= lineStart && selectionBase <= lineEnd;
-          
+          final cursorOnThisLine =
+              selectionBase >= lineStart && selectionBase <= lineEnd;
+
           if (cursorOnThisLine) {
             // This is the current editing line, check for selection style color
             final selectionStyle = controller.getSelectionStyle();
             if (selectionStyle.attributes.containsKey(Attribute.color.key)) {
-              fontColor = hexToColor(selectionStyle.attributes[Attribute.color.key]?.value);
+              fontColor = hexToColor(
+                  selectionStyle.attributes[Attribute.color.key]?.value);
             }
           }
         }
@@ -300,13 +308,17 @@ class EditableTextBlock extends StatelessWidget {
     TextStyle? leadingStyle;
     try {
       if (isOrdered) {
-        final useColor = context.quillEditorElementOptions?.orderedList.useTextColorForDot == true;
+        final useColor =
+            context.quillEditorElementOptions?.orderedList.useTextColorForDot ==
+                true;
         leadingStyle = defaultStyles.leading!.style.copyWith(
           fontSize: size,
           color: useColor ? fontColor : null,
         );
       } else if (isUnordered) {
-        final useColor = context.quillEditorElementOptions?.unorderedList.useTextColorForDot == true;
+        final useColor = context
+                .quillEditorElementOptions?.unorderedList.useTextColorForDot ==
+            true;
         leadingStyle = defaultStyles.leading!.style.copyWith(
           fontWeight: FontWeight.bold,
           fontSize: size,
@@ -328,7 +340,6 @@ class EditableTextBlock extends StatelessWidget {
         leadingStyle = defaultStyles.code!.style;
       }
     }
-
 
     final leadingConfigurations = LeadingConfigurations(
       attribute: attribute,

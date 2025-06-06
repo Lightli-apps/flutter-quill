@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+
 import '../../../flutter_quill.dart';
 
 class QuillEditorNumberPoint extends StatelessWidget {
@@ -29,7 +30,10 @@ class QuillEditorNumberPoint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Adjust alignment based on text alignment
+    // === NUMBER ALIGNMENT WITHIN CONTAINER ===
+    // This ensures number aligns properly within its allocated space based on text alignment.
+    // Note: The main positioning is handled in text_line.dart performLayout().
+    // This just aligns the number within its own container.
     final numberAlignment = switch (textAlign) {
       TextAlign.center => Alignment.center,
       TextAlign.right => Alignment.centerRight,
@@ -39,7 +43,8 @@ class QuillEditorNumberPoint extends StatelessWidget {
       _ => Alignment.centerLeft,
     };
 
-    final customWidget = context.quillEditorConfigurations?.elementOptions.orderedList.customWidget;
+    final customWidget = context
+        .quillEditorConfigurations?.elementOptions.orderedList.customWidget;
 
     if (!attrs.containsKey(Attribute.indent.key) && indentLevelCounts.isEmpty) {
       return Container(

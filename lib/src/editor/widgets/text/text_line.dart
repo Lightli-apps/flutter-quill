@@ -1159,6 +1159,19 @@ class RenderEditableTextLine extends RenderEditableBox {
         _resolvedPadding!.top;
   }
 
+  /// === MAIN LAYOUT METHOD ===
+  /// This method handles the layout of text lines with leading elements (bullets, numbers).
+  ///
+  /// **Bug Fix Summary:**
+  /// - **Bug 3**: List text alignment - bullets/numbers now properly align with text for center/right alignments
+  /// - **Color Issue**: Fixed unwanted color inheritance between list items
+  /// - **Bounds Issue**: Bullets now stay within editor bounds and don't disappear when toolbars open
+  ///
+  /// **Key Changes:**
+  /// 1. For center/right alignments: Give body widget full width so text can align properly
+  /// 2. Calculate bullet positions based on actual text rendering locations
+  /// 3. For left alignment: Position bullets at editor start to avoid negative coordinates
+  /// 4. Add safety clamping to ensure bullets never go outside editor bounds
   @override
   void performLayout() {
     final constraints = this.constraints;
@@ -1180,46 +1193,41 @@ class RenderEditableTextLine extends RenderEditableBox {
         ? _resolvedPadding!.left
         : _resolvedPadding!.right;
 
-    // Adjust layout based on text alignment
+    // === LIST ALIGNMENT FIX ===
+    // This section fixes Bug 3: "List text alignment - center/left alignment only affects text, not bullets/numbers"
+    //
+    // Problem: When text alignment was set to center/right, bullets stayed at the left edge while text moved.
+    // Root cause: Body (text) widget was offset by indent width, but bullets were always positioned relative to this offset.
+    //
+    // Solution: For center/right alignments, give the body widget full width starting at x=0,
+    // then calculate bullet positions based on actual text rendering location.
     final alignment = line.style.attributes[Attribute.align.key];
     double bodyOffsetX = _resolvedPadding!.left;
     BoxConstraints bodyConstraints = innerConstraints;
 
-    print('\n🔍 LIST ALIGNMENT DEBUG:');
-    print('📏 Original constraints: ${constraints}');
-    print('📏 Inner constraints: ${innerConstraints}');
-    print('📏 Resolved padding: ${_resolvedPadding}');
-    print('📏 Indent width: ${indentWidth}');
-    print('🎯 Alignment: ${alignment?.key} (${alignment?.value})');
-
     if (_leading != null) {
       if (alignment == Attribute.centerAlignment) {
-        // For center: give body full width and position it at start of available space
+        // For center: give body full width so text can be centered within entire available space
         bodyOffsetX = 0;
         bodyConstraints = constraints.deflate(EdgeInsets.only(
           top: _resolvedPadding!.top,
           bottom: _resolvedPadding!.bottom,
         ));
-        print('🎯 CENTER: bodyOffsetX = $bodyOffsetX, bodyConstraints = $bodyConstraints');
       } else if (alignment == Attribute.rightAlignment) {
-        // For right: give body full width and position it at start of available space
+        // For right: give body full width so text can be right-aligned within entire available space
         bodyOffsetX = 0;
         bodyConstraints = constraints.deflate(EdgeInsets.only(
           top: _resolvedPadding!.top,
           bottom: _resolvedPadding!.bottom,
         ));
-        print('🎯 RIGHT: bodyOffsetX = $bodyOffsetX, bodyConstraints = $bodyConstraints');
       } else {
-        print('🎯 LEFT/DEFAULT: bodyOffsetX = $bodyOffsetX, bodyConstraints = $bodyConstraints');
+        // For left: use traditional layout with indent offset
       }
     }
 
     _body!.layout(bodyConstraints, parentUsesSize: true);
     (_body!.parentData as BoxParentData).offset =
         Offset(bodyOffsetX, _resolvedPadding!.top);
-    
-    print('📦 Body size after layout: ${_body!.size}');
-    print('📦 Body offset: ${(_body!.parentData as BoxParentData).offset}');
 
     if (_leading != null) {
       final leadingConstraints = innerConstraints.copyWith(
@@ -1228,70 +1236,73 @@ class RenderEditableTextLine extends RenderEditableBox {
           maxHeight: _body!.size.height);
       _leading!.layout(leadingConstraints, parentUsesSize: true);
 
-      print('🎯 Leading constraints: $leadingConstraints');
-      print('🎯 Leading size after layout: ${_leading!.size}');
-
-      // Position leading based on text alignment with consistent padding
-      const double bulletPadding = 8.0; // Consistent gap between bullet and text
+      // === BULLET POSITIONING FIX ===
+      // This section calculates bullet positions that:
+      // 1. Stay aligned with text for all alignments (center, right, left)
+      // 2. Maintain consistent 8px spacing between bullet and text
+      // 3. Never go outside the editor bounds (fixes disappearing bullets when color toolbar opens)
+      const double bulletPadding =
+          8.0; // Consistent gap between bullet and text
       double leadingX = indentWidth - _leading!.size.width;
-      print('🎯 Initial leadingX (default): $leadingX');
 
       // Calculate bullet position to ensure it's always within editor bounds
-      if (alignment == Attribute.centerAlignment || alignment == Attribute.rightAlignment) {
-        // For center/right alignment: place bullet at consistent distance from text
+      if (alignment == Attribute.centerAlignment ||
+          alignment == Attribute.rightAlignment) {
+        // For center/right alignment: calculate position based on actual text location
         bool textBoxFound = false;
         try {
           // Check if there's actual text content (excluding the mandatory newline)
           final hasContent = line.length > 1;
           if (hasContent) {
-            final textSelection = TextSelection(baseOffset: 0, extentOffset: line.length - 1);
+            final textSelection =
+                TextSelection(baseOffset: 0, extentOffset: line.length - 1);
             final textBoxes = _body!.getBoxesForSelection(textSelection);
             if (textBoxes.isNotEmpty) {
               final firstBox = textBoxes.first;
-              final textStartX = firstBox.left + bodyOffsetX; // Add body offset to get absolute position
+              final textStartX = firstBox.left +
+                  bodyOffsetX; // Add body offset to get absolute position
               leadingX = textStartX - _leading!.size.width - bulletPadding;
               textBoxFound = true;
-              print('🎯 CENTER/RIGHT TEXT BOX: textStartX=$textStartX, leadingX=$leadingX');
             }
           }
-          
+
           if (!textBoxFound) {
             // Handle empty lines - simulate where text would start
             if (alignment == Attribute.centerAlignment) {
               final totalWidth = bodyConstraints.maxWidth;
               final centerX = totalWidth / 2;
               final simulatedTextStartX = centerX - 5;
-              leadingX = simulatedTextStartX + bodyOffsetX - _leading!.size.width - bulletPadding;
-              print('🎯 CENTER EMPTY: centerX=$centerX, leadingX=$leadingX');
+              leadingX = simulatedTextStartX +
+                  bodyOffsetX -
+                  _leading!.size.width -
+                  bulletPadding;
             } else if (alignment == Attribute.rightAlignment) {
               final totalWidth = bodyConstraints.maxWidth;
               final simulatedTextStartX = totalWidth - 10;
-              leadingX = simulatedTextStartX + bodyOffsetX - _leading!.size.width - bulletPadding;
-              print('🎯 RIGHT EMPTY: totalWidth=$totalWidth, leadingX=$leadingX');
+              leadingX = simulatedTextStartX +
+                  bodyOffsetX -
+                  _leading!.size.width -
+                  bulletPadding;
             }
           }
         } catch (e) {
-          print('🎯 ERROR in text box calculation: $e, using fallback');
+          // Fallback to default positioning if text box calculation fails
           leadingX = indentWidth - _leading!.size.width;
         }
       } else {
-        // For left alignment: place bullet at start of editor bounds to avoid going outside
-        // Instead of positioning based on text (which would be outside bounds),
-        // position bullet at the very start of available space
+        // For left alignment: place bullet at start of editor bounds
+        // Problem: Normal calculation would place bullet at negative X (outside editor bounds)
+        // Solution: Position bullet at leftmost edge of available space (x=0)
         leadingX = 0; // Place at leftmost edge of editor
-        print('🎯 LEFT ALIGNMENT: positioning at editor start, leadingX=$leadingX');
       }
 
-      // Ensure bullet never goes outside editor bounds
+      // Safety clamp: ensure bullet never goes outside editor bounds
+      // This prevents bullets from being clipped when toolbars open and reduce available space
       final maxLeadingX = constraints.maxWidth - _leading!.size.width;
       leadingX = leadingX.clamp(0.0, maxLeadingX);
-      
+
       (_leading!.parentData as BoxParentData).offset =
           Offset(leadingX, _resolvedPadding!.top);
-      
-      print('🎯 Final leading offset (clamped): ${(_leading!.parentData as BoxParentData).offset}');
-      print('🎯 Clamp range: 0.0 to $maxLeadingX');
-      print('✅ LAYOUT COMPLETE\n');
     }
 
     size = constraints.constrain(Size(
