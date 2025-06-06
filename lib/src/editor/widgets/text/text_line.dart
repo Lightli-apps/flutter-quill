@@ -1231,56 +1231,58 @@ class RenderEditableTextLine extends RenderEditableBox {
       print('🎯 Leading constraints: $leadingConstraints');
       print('🎯 Leading size after layout: ${_leading!.size}');
 
-      // Position leading based on text alignment
+      // Position leading based on text alignment with consistent padding
+      const double bulletPadding = 8.0; // Consistent gap between bullet and text
       double leadingX = indentWidth - _leading!.size.width;
       print('🎯 Initial leadingX (default): $leadingX');
-      
-      if (alignment == Attribute.centerAlignment) {
-        // For center: try to get text boxes to find actual text position
-        try {
+
+      // Try to get actual text position for all alignments to ensure consistent padding
+      bool textBoxFound = false;
+      try {
+        // Check if there's actual text content (excluding the mandatory newline)
+        final hasContent = line.length > 1;
+        if (hasContent) {
           final textSelection = TextSelection(baseOffset: 0, extentOffset: line.length - 1);
           final textBoxes = _body!.getBoxesForSelection(textSelection);
           if (textBoxes.isNotEmpty) {
             final firstBox = textBoxes.first;
-            final textStartX = firstBox.left;
-            leadingX = textStartX - indentWidth;
-            print('🎯 CENTER CALC: textBoxes found, textStartX=$textStartX, final leadingX=$leadingX');
-          } else {
-            // Fallback to center calculation
+            final textStartX = firstBox.left + bodyOffsetX; // Add body offset to get absolute position
+            leadingX = textStartX - _leading!.size.width - bulletPadding;
+            textBoxFound = true;
+            print('🎯 TEXT BOX CALC: hasContent=$hasContent, textStartX=$textStartX, bodyOffsetX=$bodyOffsetX, leadingWidth=${_leading!.size.width}, padding=$bulletPadding, final leadingX=$leadingX');
+          }
+        }
+        
+        if (!textBoxFound) {
+          // Handle empty lines or fallback cases - simulate where text would start
+          print('🎯 EMPTY LINE OR FALLBACK: hasContent=$hasContent, calculating expected text position');
+
+          if (alignment == Attribute.centerAlignment) {
+            // For center: simulate where centered text would start
             final totalWidth = bodyConstraints.maxWidth;
             final centerX = totalWidth / 2;
-            leadingX = centerX - indentWidth / 2;
-            print('🎯 CENTER CALC (fallback): totalWidth=$totalWidth, centerX=$centerX, final leadingX=$leadingX');
-          }
-        } catch (e) {
-          // Fallback to center calculation
-          final totalWidth = bodyConstraints.maxWidth;
-          final centerX = totalWidth / 2;
-          leadingX = centerX - indentWidth / 2;
-          print('🎯 CENTER CALC (error fallback): totalWidth=$totalWidth, centerX=$centerX, final leadingX=$leadingX, error=$e');
-        }
-      } else if (alignment == Attribute.rightAlignment) {
-        // For right: try to get text boxes to find actual text position
-        try {
-          final textSelection = TextSelection(baseOffset: 0, extentOffset: line.length - 1);
-          final textBoxes = _body!.getBoxesForSelection(textSelection);
-          if (textBoxes.isNotEmpty) {
-            final firstBox = textBoxes.first;
-            final textStartX = firstBox.left;
-            leadingX = textStartX - indentWidth;
-            print('🎯 RIGHT CALC: textBoxes found, textStartX=$textStartX, final leadingX=$leadingX');
-          } else {
-            // Fallback to right edge calculation
+            // For empty line, assume minimal text width and center it
+            final simulatedTextStartX = centerX - 5; // Very small placeholder text
+
+            leadingX = simulatedTextStartX + bodyOffsetX - _leading!.size.width - bulletPadding;
+            print('🎯 CENTER EMPTY: totalWidth=$totalWidth, centerX=$centerX, simulatedTextStartX=$simulatedTextStartX, final leadingX=$leadingX');
+          } else if (alignment == Attribute.rightAlignment) {
+            // For right: simulate where right-aligned text would start
             final totalWidth = bodyConstraints.maxWidth;
-            leadingX = totalWidth - indentWidth;
-            print('🎯 RIGHT CALC (fallback): totalWidth=$totalWidth, final leadingX=$leadingX');
+            // For empty line, text would start very close to the right edge (like a cursor position)
+            final simulatedTextStartX = totalWidth - 10; // Very close to edge, like cursor
+            leadingX = simulatedTextStartX + bodyOffsetX - _leading!.size.width - bulletPadding;
+            print('🎯 RIGHT EMPTY: totalWidth=$totalWidth, simulatedTextStartX=$simulatedTextStartX, final leadingX=$leadingX');
+          } else {
+            // For left: text starts at beginning of body
+            final simulatedTextStartX = 0;
+            leadingX = simulatedTextStartX + bodyOffsetX - _leading!.size.width - bulletPadding;
+            print('🎯 LEFT EMPTY: simulatedTextStartX=$simulatedTextStartX, bodyOffsetX=$bodyOffsetX, final leadingX=$leadingX');
           }
-        } catch (e) {
-          // Fallback to right edge calculation
-          final totalWidth = bodyConstraints.maxWidth;
-          leadingX = totalWidth - indentWidth;
-          print('🎯 RIGHT CALC (error fallback): totalWidth=$totalWidth, final leadingX=$leadingX, error=$e');
         }
+      } catch (e) {
+        print('🎯 ERROR in text box calculation: $e, using original default');
+        leadingX = indentWidth - _leading!.size.width;
       }
 
       (_leading!.parentData as BoxParentData).offset =
