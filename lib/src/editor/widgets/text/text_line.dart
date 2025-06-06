@@ -1236,59 +1236,61 @@ class RenderEditableTextLine extends RenderEditableBox {
       double leadingX = indentWidth - _leading!.size.width;
       print('🎯 Initial leadingX (default): $leadingX');
 
-      // Try to get actual text position for all alignments to ensure consistent padding
-      bool textBoxFound = false;
-      try {
-        // Check if there's actual text content (excluding the mandatory newline)
-        final hasContent = line.length > 1;
-        if (hasContent) {
-          final textSelection = TextSelection(baseOffset: 0, extentOffset: line.length - 1);
-          final textBoxes = _body!.getBoxesForSelection(textSelection);
-          if (textBoxes.isNotEmpty) {
-            final firstBox = textBoxes.first;
-            final textStartX = firstBox.left + bodyOffsetX; // Add body offset to get absolute position
-            leadingX = textStartX - _leading!.size.width - bulletPadding;
-            textBoxFound = true;
-            print('🎯 TEXT BOX CALC: hasContent=$hasContent, textStartX=$textStartX, bodyOffsetX=$bodyOffsetX, leadingWidth=${_leading!.size.width}, padding=$bulletPadding, final leadingX=$leadingX');
+      // Calculate bullet position to ensure it's always within editor bounds
+      if (alignment == Attribute.centerAlignment || alignment == Attribute.rightAlignment) {
+        // For center/right alignment: place bullet at consistent distance from text
+        bool textBoxFound = false;
+        try {
+          // Check if there's actual text content (excluding the mandatory newline)
+          final hasContent = line.length > 1;
+          if (hasContent) {
+            final textSelection = TextSelection(baseOffset: 0, extentOffset: line.length - 1);
+            final textBoxes = _body!.getBoxesForSelection(textSelection);
+            if (textBoxes.isNotEmpty) {
+              final firstBox = textBoxes.first;
+              final textStartX = firstBox.left + bodyOffsetX; // Add body offset to get absolute position
+              leadingX = textStartX - _leading!.size.width - bulletPadding;
+              textBoxFound = true;
+              print('🎯 CENTER/RIGHT TEXT BOX: textStartX=$textStartX, leadingX=$leadingX');
+            }
           }
-        }
-        
-        if (!textBoxFound) {
-          // Handle empty lines or fallback cases - simulate where text would start
-          print('🎯 EMPTY LINE OR FALLBACK: hasContent=$hasContent, calculating expected text position');
-
-          if (alignment == Attribute.centerAlignment) {
-            // For center: simulate where centered text would start
-            final totalWidth = bodyConstraints.maxWidth;
-            final centerX = totalWidth / 2;
-            // For empty line, assume minimal text width and center it
-            final simulatedTextStartX = centerX - 5; // Very small placeholder text
-
-            leadingX = simulatedTextStartX + bodyOffsetX - _leading!.size.width - bulletPadding;
-            print('🎯 CENTER EMPTY: totalWidth=$totalWidth, centerX=$centerX, simulatedTextStartX=$simulatedTextStartX, final leadingX=$leadingX');
-          } else if (alignment == Attribute.rightAlignment) {
-            // For right: simulate where right-aligned text would start
-            final totalWidth = bodyConstraints.maxWidth;
-            // For empty line, text would start very close to the right edge (like a cursor position)
-            final simulatedTextStartX = totalWidth - 10; // Very close to edge, like cursor
-            leadingX = simulatedTextStartX + bodyOffsetX - _leading!.size.width - bulletPadding;
-            print('🎯 RIGHT EMPTY: totalWidth=$totalWidth, simulatedTextStartX=$simulatedTextStartX, final leadingX=$leadingX');
-          } else {
-            // For left: text starts at beginning of body
-            final simulatedTextStartX = 0;
-            leadingX = simulatedTextStartX + bodyOffsetX - _leading!.size.width - bulletPadding;
-            print('🎯 LEFT EMPTY: simulatedTextStartX=$simulatedTextStartX, bodyOffsetX=$bodyOffsetX, final leadingX=$leadingX');
+          
+          if (!textBoxFound) {
+            // Handle empty lines - simulate where text would start
+            if (alignment == Attribute.centerAlignment) {
+              final totalWidth = bodyConstraints.maxWidth;
+              final centerX = totalWidth / 2;
+              final simulatedTextStartX = centerX - 5;
+              leadingX = simulatedTextStartX + bodyOffsetX - _leading!.size.width - bulletPadding;
+              print('🎯 CENTER EMPTY: centerX=$centerX, leadingX=$leadingX');
+            } else if (alignment == Attribute.rightAlignment) {
+              final totalWidth = bodyConstraints.maxWidth;
+              final simulatedTextStartX = totalWidth - 10;
+              leadingX = simulatedTextStartX + bodyOffsetX - _leading!.size.width - bulletPadding;
+              print('🎯 RIGHT EMPTY: totalWidth=$totalWidth, leadingX=$leadingX');
+            }
           }
+        } catch (e) {
+          print('🎯 ERROR in text box calculation: $e, using fallback');
+          leadingX = indentWidth - _leading!.size.width;
         }
-      } catch (e) {
-        print('🎯 ERROR in text box calculation: $e, using original default');
-        leadingX = indentWidth - _leading!.size.width;
+      } else {
+        // For left alignment: place bullet at start of editor bounds to avoid going outside
+        // Instead of positioning based on text (which would be outside bounds),
+        // position bullet at the very start of available space
+        leadingX = 0; // Place at leftmost edge of editor
+        print('🎯 LEFT ALIGNMENT: positioning at editor start, leadingX=$leadingX');
       }
 
+      // Ensure bullet never goes outside editor bounds
+      final maxLeadingX = constraints.maxWidth - _leading!.size.width;
+      leadingX = leadingX.clamp(0.0, maxLeadingX);
+      
       (_leading!.parentData as BoxParentData).offset =
           Offset(leadingX, _resolvedPadding!.top);
       
-      print('🎯 Final leading offset: ${(_leading!.parentData as BoxParentData).offset}');
+      print('🎯 Final leading offset (clamped): ${(_leading!.parentData as BoxParentData).offset}');
+      print('🎯 Clamp range: 0.0 to $maxLeadingX');
       print('✅ LAYOUT COMPLETE\n');
     }
 

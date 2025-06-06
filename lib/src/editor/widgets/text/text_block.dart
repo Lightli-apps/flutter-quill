@@ -216,47 +216,7 @@ class EditableTextBlock extends StatelessWidget {
     return children.toList(growable: false);
   }
 
-  Color? _getLastUsedColor(Line currentLine) {
-    try {
-      // Look through all lines in the current block for the last used color
-      final blockLines = Iterable.castFrom<dynamic, Line>(block.children);
-      final linesList = blockLines.toList();
-      
-      // Find current line index
-      int currentIndex = -1;
-      for (int i = 0; i < linesList.length; i++) {
-        if (linesList[i] == currentLine) {
-          currentIndex = i;
-          break;
-        }
-      }
-      
-      // Search backwards from current line
-      for (int i = currentIndex - 1; i >= 0; i--) {
-        final line = linesList[i];
-        final delta = line.toDelta();
-        for (final op in delta.toList()) {
-          if (op.attributes != null && op.attributes!.containsKey(Attribute.color.key)) {
-            return hexToColor(op.attributes![Attribute.color.key]);
-          }
-        }
-      }
-      
-      // If still no color found, search forward (for cases where color might be in later lines)
-      for (int i = currentIndex + 1; i < linesList.length; i++) {
-        final line = linesList[i];
-        final delta = line.toDelta();
-        for (final op in delta.toList()) {
-          if (op.attributes != null && op.attributes!.containsKey(Attribute.color.key)) {
-            return hexToColor(op.attributes![Attribute.color.key]);
-          }
-        }
-      }
-    } catch (e) {
-      // If any error occurs, return null to fall back to default behavior
-    }
-    return null;
-  }
+
 
   Widget? _buildLeading({
     required BuildContext context,
@@ -281,8 +241,8 @@ class EditableTextBlock extends StatelessWidget {
         break;
       }
     }
-    // If no color found in current line, check previous lines
-    fontColor ??= _getLastUsedColor(line);
+    // Don't use backward color scanning for list items to prevent color inheritance
+    // Each list item should maintain its own color independently
 
     // Of the size button
     final size =
@@ -306,22 +266,70 @@ class EditableTextBlock extends StatelessWidget {
     final isCodeBlock = attrs.containsKey(Attribute.codeBlock.key);
     if (attribute == null) return null;
     
-    // If still no color and this is a list item, try to get color from the controller's selection style
-    // This handles the case where list formatting was just applied to colored text
+    // If no explicit color found and this is a list item, check if this is the current editing line
+    // and if so, use the selection style color for new list items being created
     if (fontColor == null && (isUnordered || isOrdered)) {
       try {
-        // Try to get the controller from context to check current selection style
-        final quillEditor = context.findAncestorWidgetOfExactType<QuillEditor>();
-        if (quillEditor != null) {
-          final selectionStyle = quillEditor.controller.getSelectionStyle();
-          if (selectionStyle.attributes.containsKey(Attribute.color.key)) {
-            fontColor = hexToColor(selectionStyle.attributes[Attribute.color.key]?.value);
+        // Get selection information safely
+        final selection = controller.selection;
+        if (selection.isValid && !selection.isCollapsed) {
+          // If there's a text selection, don't apply selection style color
+          // This prevents issues when color toolbar is open
+        } else if (selection.isValid) {
+          // Check if the cursor is on this line by comparing document offsets
+          final selectionBase = selection.baseOffset;
+          final lineStart = line.documentOffset;
+          final lineEnd = lineStart + line.length - 1; // -1 because line.length includes newline
+          
+          // If the cursor is positioned within this line
+          final cursorOnThisLine = selectionBase >= lineStart && selectionBase <= lineEnd;
+          
+          if (cursorOnThisLine) {
+            // This is the current editing line, check for selection style color
+            final selectionStyle = controller.getSelectionStyle();
+            if (selectionStyle.attributes.containsKey(Attribute.color.key)) {
+              fontColor = hexToColor(selectionStyle.attributes[Attribute.color.key]?.value);
+            }
           }
         }
       } catch (e) {
         // Ignore errors, fall back to default
       }
     }
+    // Create style with safe fallbacks
+    TextStyle? leadingStyle;
+    try {
+      if (isOrdered) {
+        final useColor = context.quillEditorElementOptions?.orderedList.useTextColorForDot == true;
+        leadingStyle = defaultStyles.leading!.style.copyWith(
+          fontSize: size,
+          color: useColor ? fontColor : null,
+        );
+      } else if (isUnordered) {
+        final useColor = context.quillEditorElementOptions?.unorderedList.useTextColorForDot == true;
+        leadingStyle = defaultStyles.leading!.style.copyWith(
+          fontWeight: FontWeight.bold,
+          fontSize: size,
+          color: useColor ? fontColor : null,
+        );
+      } else if (!isCheck) {
+        leadingStyle = defaultStyles.code!.style.copyWith(
+          color: defaultStyles.code!.style.color!.withOpacity(0.4),
+        );
+      }
+    } catch (e) {
+      // Fallback to basic style if there's any error
+      if (isOrdered || isUnordered) {
+        leadingStyle = defaultStyles.leading!.style.copyWith(
+          fontSize: size,
+          fontWeight: isUnordered ? FontWeight.bold : null,
+        );
+      } else if (!isCheck) {
+        leadingStyle = defaultStyles.code!.style;
+      }
+    }
+
+
     final leadingConfigurations = LeadingConfigurations(
       attribute: attribute,
       attrs: attrs,
@@ -329,30 +337,7 @@ class EditableTextBlock extends StatelessWidget {
       index: isOrdered || isCodeBlock ? index : null,
       count: count,
       enabled: !isCheck ? null : !(checkBoxReadOnly ?? readOnly),
-      style: isOrdered
-          ? defaultStyles.leading!.style.copyWith(
-              fontSize: size,
-              color: context.quillEditorElementOptions?.orderedList
-                          .useTextColorForDot ==
-                      true
-                  ? fontColor
-                  : null,
-            )
-          : isUnordered
-              ? defaultStyles.leading!.style.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: size,
-                  color: context.quillEditorElementOptions?.unorderedList
-                              .useTextColorForDot ==
-                          true
-                      ? fontColor
-                      : null,
-                )
-              : isCheck
-                  ? null
-                  : defaultStyles.code!.style.copyWith(
-                      color: defaultStyles.code!.style.color!.withOpacity(0.4),
-                    ),
+      style: leadingStyle,
       width: isOrdered || isCodeBlock
           ? numberPointWidthBuilder(fontSize, count)
           : isUnordered

@@ -30,14 +30,15 @@ class QuillEditorBulletPoint extends StatelessWidget {
       _ => Alignment.centerLeft,
     };
 
+    final customWidget = context.quillEditorConfigurations?.elementOptions.unorderedList.customWidget;
+
     return Container(
       width: width,
       padding: EdgeInsetsDirectional.only(end: padding),
       color: backgroundColor,
       child: Align(
         alignment: bulletAlignment,
-        child: context.quillEditorConfigurations?.elementOptions.unorderedList
-                .customWidget ??
+        child: customWidget ??
             Text(
               '•',
               style: style,

@@ -39,6 +39,8 @@ class QuillEditorNumberPoint extends StatelessWidget {
       _ => Alignment.centerLeft,
     };
 
+    final customWidget = context.quillEditorConfigurations?.elementOptions.orderedList.customWidget;
+
     if (!attrs.containsKey(Attribute.indent.key) && indentLevelCounts.isEmpty) {
       return Container(
         width: width,
@@ -46,8 +48,7 @@ class QuillEditorNumberPoint extends StatelessWidget {
         color: backgroundColor,
         child: Align(
           alignment: numberAlignment,
-          child: context.quillEditorConfigurations?.elementOptions.orderedList
-                  .customWidget ??
+          child: customWidget ??
               Text(
                 withDot ? '$index.' : index,
                 style: style,
@@ -61,8 +62,7 @@ class QuillEditorNumberPoint extends StatelessWidget {
       color: backgroundColor,
       child: Align(
         alignment: numberAlignment,
-        child: context.quillEditorConfigurations?.elementOptions.orderedList
-                .customWidget ??
+        child: customWidget ??
             Text(
               withDot ? '$index.' : index,
               style: style,
