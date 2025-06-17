@@ -270,9 +270,8 @@ class EditableTextBlock extends StatelessWidget {
     final isCodeBlock = attrs.containsKey(Attribute.codeBlock.key);
     if (attribute == null) return null;
 
-    // Step 2: For new list items being typed, inherit color from current selection
-    // This ensures that when user selects a color and creates a new list item,
-    // the bullet gets the selected color, but only for the current line being edited.
+    // Step 2: For new list items being typed, only inherit color from current selection
+    // when creating a completely new list item, not when changing color within existing line
     if (fontColor == null && (isUnordered || isOrdered)) {
       try {
         final selection = controller.selection;
@@ -292,11 +291,18 @@ class EditableTextBlock extends StatelessWidget {
               selectionBase >= lineStart && selectionBase <= lineEnd;
 
           if (cursorOnThisLine) {
-            // This is the current editing line, check for selection style color
-            final selectionStyle = controller.getSelectionStyle();
-            if (selectionStyle.attributes.containsKey(Attribute.color.key)) {
-              fontColor = hexToColor(
-                  selectionStyle.attributes[Attribute.color.key]?.value);
+
+            // Check if this line has any existing text content (excluding just the newline)
+            final hasExistingContent = line.length > 1;
+
+            // Only apply selection style color for new empty list items
+            // Don't change bullet color when modifying text color in existing lines
+            if (!hasExistingContent) {
+              final selectionStyle = controller.getSelectionStyle();
+              if (selectionStyle.attributes.containsKey(Attribute.color.key)) {
+                fontColor = hexToColor(
+                    selectionStyle.attributes[Attribute.color.key]?.value);
+              }
             }
           }
         }
