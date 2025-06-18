@@ -237,11 +237,11 @@ class EditableTextBlock extends StatelessWidget {
     // Step 1: Check if this line has explicit color attributes
     Color? fontColor;
     final lineOperations = line.toDelta().toList();
-    for (final op in lineOperations) {
-      if (op.attributes != null &&
-          op.attributes!.containsKey(Attribute.color.key)) {
-        fontColor = hexToColor(op.attributes![Attribute.color.key]);
-        break;
+    if (lineOperations.isNotEmpty) {
+      final firstOp = lineOperations.first;
+      if (firstOp.attributes != null &&
+          firstOp.attributes!.containsKey(Attribute.color.key)) {
+        fontColor = hexToColor(firstOp.attributes![Attribute.color.key]);
       }
     }
 
